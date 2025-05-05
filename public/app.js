@@ -34,24 +34,13 @@ function updateURL(lat, lng, zoom) {
   window.history.pushState({}, "", url);
 }
 
-function createLanguageToggle() {
-  const button = L.control({ position: "topright" });
-  button.onAdd = function () {
-    const div = L.DomUtil.create("div", "language-toggle");
-    div.innerHTML = `<button>${translations[currentLang].toggleLanguage}</button>`;
-    div.onclick = toggleLanguage;
-    return div;
-  };
-  button.addTo(map);
-}
-
 function toggleLanguage() {
   currentLang = currentLang === "en" ? "he" : "en";
-  // Update the toggle button text
-  document.querySelector(".language-toggle button").textContent =
-    translations[currentLang].toggleLanguage;
   // Set RTL for Hebrew
   document.body.dir = currentLang === "he" ? "rtl" : "ltr";
+  // Update the toggle button text
+  const toggleButton = document.querySelector("#language-toggle button");
+  toggleButton.textContent = translations[currentLang].toggleLanguage;
   // If there's a marker, refresh the weather data with new language
   if (marker) {
     const latlng = marker.getLatLng();
@@ -72,8 +61,10 @@ function initMap() {
     attribution: "© OpenStreetMap contributors",
   }).addTo(map);
 
-  // Add language toggle button
-  createLanguageToggle();
+  // Initialize language toggle
+  const toggleButton = document.querySelector("#language-toggle button");
+  toggleButton.textContent = translations[currentLang].toggleLanguage;
+  toggleButton.onclick = toggleLanguage; // Use onclick instead of addEventListener
 
   // Update URL when map moves
   map.on("moveend", () => {

@@ -28,21 +28,26 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         display: none;
         z-index: 1000;
+        max-width: 300px;
       }
-      .language-toggle {
+      #language-toggle {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
         background: white;
         padding: 5px;
         border-radius: 4px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
       }
-      .language-toggle button {
+      #language-toggle button {
         border: none;
         background: none;
         cursor: pointer;
         padding: 5px 10px;
         font-size: 14px;
       }
-      .language-toggle button:hover {
+      #language-toggle button:hover {
         background: #f0f0f0;
       }
       /* RTL styles */
@@ -50,14 +55,40 @@
         right: auto;
         left: 20px;
       }
-      [dir="rtl"] .language-toggle {
-        text-align: right;
+      [dir="rtl"] #language-toggle {
+        left: auto;
+        right: 20px;
+      }
+      /* Mobile styles */
+      @media (max-width: 768px) {
+        #weather-info {
+          top: 10px;
+          right: 10px;
+          left: 10px;
+          max-width: none;
+          margin: 0 10px;
+        }
+        [dir="rtl"] #weather-info {
+          right: 10px;
+          left: 10px;
+        }
+        #language-toggle {
+          bottom: 10px;
+          left: 10px;
+        }
+        [dir="rtl"] #language-toggle {
+          left: auto;
+          right: 10px;
+        }
       }
     </style>
   </head>
   <body>
     <div id="map"></div>
     <div id="weather-info"></div>
+    <div id="language-toggle">
+      <button>English</button>
+    </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="translations.js"></script>
     <script src="app.js"></script>
