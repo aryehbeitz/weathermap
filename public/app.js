@@ -1,7 +1,8 @@
 let map;
 let marker;
 const weatherInfo = document.getElementById("weather-info");
-let currentLang = "en";
+let currentLang =
+  new URLSearchParams(window.location.search).get("lang") || "en";
 
 function getWindDirection(degrees) {
   const directions = [
@@ -31,6 +32,7 @@ function updateURL(lat, lng, zoom) {
   url.searchParams.set("lat", lat.toFixed(6));
   url.searchParams.set("lng", lng.toFixed(6));
   url.searchParams.set("zoom", zoom);
+  url.searchParams.set("lang", currentLang);
   window.history.pushState({}, "", url);
 }
 
@@ -41,6 +43,10 @@ function toggleLanguage() {
   // Update the toggle button text
   const toggleButton = document.querySelector("#language-toggle button");
   toggleButton.textContent = translations[currentLang].toggleLanguage;
+  // Update URL with new language
+  const url = new URL(window.location);
+  url.searchParams.set("lang", currentLang);
+  window.history.pushState({}, "", url);
   // If there's a marker, refresh the weather data with new language
   if (marker) {
     const latlng = marker.getLatLng();
@@ -55,6 +61,9 @@ function initMap() {
   const initialLng = parseFloat(urlParams.get("lng")) || 0;
   const initialZoom = parseInt(urlParams.get("zoom")) || 2;
 
+  // Set initial language and RTL
+  document.body.dir = currentLang === "he" ? "rtl" : "ltr";
+
   map = L.map("map").setView([initialLat, initialLng], initialZoom);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -64,7 +73,7 @@ function initMap() {
   // Initialize language toggle
   const toggleButton = document.querySelector("#language-toggle button");
   toggleButton.textContent = translations[currentLang].toggleLanguage;
-  toggleButton.onclick = toggleLanguage; // Use onclick instead of addEventListener
+  toggleButton.onclick = toggleLanguage;
 
   // Update URL when map moves
   map.on("moveend", () => {

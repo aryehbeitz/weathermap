@@ -9,7 +9,7 @@ const translations = {
     kmh: "km/h",
     celsius: "°C",
     percent: "%",
-    toggleLanguage: "Toggle Hebrew",
+    toggleLanguage: "החלף לעברית",
   },
   he: {
     temperature: "טמפרטורה",
@@ -21,6 +21,6 @@ const translations = {
     kmh: 'קמ"ש',
     celsius: "°צ",
     percent: "%",
-    toggleLanguage: "החלף לעברית",
+    toggleLanguage: "Change to English",
   },
 };
