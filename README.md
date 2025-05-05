@@ -16,6 +16,63 @@ A minimalistic weather application with map integration and multilingual support
 - Minimizable weather info popup
 - Persistent state through URL parameters
 - Progressive Web App (PWA) support - can be installed on devices and works offline
+- Automatic version tracking with auto-refresh on updates
+
+## Version Tracking
+
+The application includes automatic version tracking and auto-refresh functionality:
+
+1. Version information is stored in `version.json`
+2. The version is automatically incremented on each commit using a Git pre-commit hook
+3. The current version is displayed in the UI next to the "Find My Location" button
+4. The application checks for version updates every 10 seconds
+5. If a new version is detected, the page automatically refreshes
+
+### Setting Up Version Tracking
+
+1. Create the pre-commit hook:
+
+```bash
+# Create the pre-commit hook file
+cat > .git/hooks/pre-commit << 'EOL'
+#!/bin/sh
+
+# Read current version
+CURRENT_VERSION=$(node -p "require('./version.json').version")
+
+# Increment patch version
+NEW_VERSION=$(node -p "
+  const [major, minor, patch] = '$CURRENT_VERSION'.split('.').map(Number);
+  [major, minor, patch + 1].join('.')
+")
+
+# Update version.json
+node -p "
+  const fs = require('fs');
+  const version = '$NEW_VERSION';
+  fs.writeFileSync('./version.json', JSON.stringify({ version }, null, 2));
+"
+
+# Add version.json to the commit
+git add version.json
+EOL
+
+# Make the hook executable
+chmod +x .git/hooks/pre-commit
+```
+
+2. Create the initial version.json file:
+
+```bash
+echo '{"version": "1.0.0"}' > version.json
+```
+
+3. Add version.json to git:
+
+```bash
+git add version.json
+git commit -m "chore: add version tracking"
+```
 
 ## Local Development Setup
 
