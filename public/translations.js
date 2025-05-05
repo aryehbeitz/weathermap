@@ -11,6 +11,7 @@ const translations = {
     celsius: "°C",
     toggleLanguage: "עברית",
     forecast: "Next 5 hours",
+    toggleSize: "Toggle size",
   },
   he: {
     temperature: "טמפרטורה",
@@ -24,5 +25,6 @@ const translations = {
     celsius: "°C",
     toggleLanguage: "English",
     forecast: "5 השעות הבאות",
+    toggleSize: "שינוי גודל",
   },
 };

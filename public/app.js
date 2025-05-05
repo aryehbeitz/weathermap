@@ -167,6 +167,7 @@ async function fetchWeather(lat, lng) {
 
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `
+      <button class="toggle-size" title="${translations[currentLang].toggleSize}">⤒</button>
       <div class="current-weather">
         <h3>${cityName}</h3>
         <p>${translations[currentLang].temperature}: ${currentData.main.temp}${translations[currentLang].celsius}</p>
@@ -181,6 +182,15 @@ async function fetchWeather(lat, lng) {
         </div>
       </div>
     `;
+
+    // Add toggle button functionality
+    const toggleButton = weatherInfo.querySelector(".toggle-size");
+    toggleButton.addEventListener("click", () => {
+      weatherInfo.classList.toggle("minimized");
+      toggleButton.textContent = weatherInfo.classList.contains("minimized")
+        ? "⤓"
+        : "⤒";
+    });
   } catch (error) {
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;

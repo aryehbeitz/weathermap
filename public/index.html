@@ -32,6 +32,25 @@
         max-height: 80vh;
         overflow-y: auto;
       }
+      #weather-info.minimized {
+        max-height: 150px;
+        overflow: hidden;
+      }
+      #weather-info .toggle-size {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        color: #666;
+        padding: 5px;
+        z-index: 1001;
+      }
+      #weather-info .toggle-size:hover {
+        color: #333;
+      }
       .current-weather {
         margin-bottom: 15px;
       }
@@ -104,6 +123,10 @@
       [dir="rtl"] .forecast-wind {
         text-align: left;
       }
+      [dir="rtl"] #weather-info .toggle-size {
+        right: auto;
+        left: 10px;
+      }
       /* Mobile styles */
       @media (max-width: 768px) {
         #weather-info {
@@ -112,6 +135,10 @@
           left: 10px;
           max-width: none;
           margin: 0 10px;
+          max-height: 80vh;
+        }
+        #weather-info.minimized {
+          max-height: 120px;
         }
         [dir="rtl"] #weather-info {
           right: 10px;
