@@ -111,7 +111,6 @@ function initMap() {
 function logMessage(message) {
   const logBox = document.getElementById("log-box");
   if (!logBox) return;
-  logBox.classList.remove("hidden");
   const timestamp = new Date().toLocaleTimeString();
   const wasScrolledToBottom =
     logBox.scrollHeight - logBox.scrollTop === logBox.clientHeight;
@@ -125,7 +124,6 @@ function clearLog() {
   const logBox = document.getElementById("log-box");
   if (!logBox) return;
   logBox.innerHTML = "";
-  logBox.classList.add("hidden");
 }
 
 // Initialize log box
