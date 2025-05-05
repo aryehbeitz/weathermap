@@ -17,6 +17,36 @@ let marker;
 const weatherInfo = document.getElementById("weather-info");
 let currentLang =
   new URLSearchParams(window.location.search).get("lang") || "en";
+let currentVersion = null;
+
+// Version checking function
+async function checkVersion() {
+  try {
+    const response = await fetch("/version.json");
+    const data = await response.json();
+
+    // Update version display
+    const versionElement = document.getElementById("version");
+    if (versionElement) {
+      versionElement.textContent = `v${data.version}`;
+    }
+
+    // Check if version has changed
+    if (currentVersion && currentVersion !== data.version) {
+      window.location.reload(true); // Hard refresh
+    }
+
+    currentVersion = data.version;
+  } catch (error) {
+    console.error("Error checking version:", error);
+  }
+}
+
+// Check version every 10 seconds
+setInterval(checkVersion, 10000);
+
+// Initial version check
+checkVersion();
 
 function getWindDirection(degrees) {
   const directions = [

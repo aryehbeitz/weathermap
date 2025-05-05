@@ -183,6 +183,15 @@
           right: 10px;
         }
       }
+      .version {
+        color: #666;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+      [dir="rtl"] .version {
+        margin-left: 0;
+        margin-right: 10px;
+      }
     </style>
   </head>
   <body>
@@ -191,6 +200,7 @@
     <div id="language-toggle">
       <button>English</button>
       <button id="find-location">📍 Find My Location</button>
+      <span id="version" class="version"></span>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="translations.js"></script>
