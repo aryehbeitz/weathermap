@@ -220,4 +220,52 @@ async function fetchWeather(lat, lng) {
 }
 
 // Initialize the map when the page loads
-document.addEventListener("DOMContentLoaded", initMap);
+document.addEventListener("DOMContentLoaded", () => {
+  initMap();
+  const findLocationBtn = document.getElementById("find-location");
+  if (findLocationBtn) {
+    findLocationBtn.textContent = translations[currentLang].findLocation;
+    findLocationBtn.onclick = () => {
+      if (navigator.geolocation) {
+        findLocationBtn.disabled = true;
+        findLocationBtn.textContent =
+          translations[currentLang].findLocation + "...";
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            map.setView([lat, lng], 12);
+            if (marker) {
+              map.removeLayer(marker);
+            }
+            marker = L.marker([lat, lng]).addTo(map);
+            fetchWeather(lat, lng);
+            findLocationBtn.disabled = false;
+            findLocationBtn.textContent =
+              translations[currentLang].findLocation;
+          },
+          (error) => {
+            alert("Unable to retrieve your location.");
+            findLocationBtn.disabled = false;
+            findLocationBtn.textContent =
+              translations[currentLang].findLocation;
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    };
+  }
+
+  // Update Find Location button text on language toggle
+  const toggleButton = document.querySelector("#language-toggle button");
+  if (toggleButton) {
+    const originalToggle = toggleButton.onclick;
+    toggleButton.onclick = function () {
+      originalToggle && originalToggle();
+      if (findLocationBtn) {
+        findLocationBtn.textContent = translations[currentLang].findLocation;
+      }
+    };
+  }
+});

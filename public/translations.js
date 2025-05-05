@@ -12,6 +12,7 @@ const translations = {
     toggleLanguage: "עברית",
     forecast: "Next 5 hours",
     toggleSize: "Toggle size",
+    findLocation: "📍 Find My Location",
   },
   he: {
     temperature: "טמפרטורה",
@@ -26,5 +27,6 @@ const translations = {
     toggleLanguage: "English",
     forecast: "5 השעות הבאות",
     toggleSize: "שינוי גודל",
+    findLocation: "📍 מצא מיקום נוכחי",
   },
 };
