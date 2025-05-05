@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +12,11 @@ const LANG = process.env.LANG || "en";
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
+
+// Serve version.json
+app.get("/version.json", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "version.json"));
+});
 
 app.get("/api/weather", async (req, res) => {
   const { lat, lon, lang } = req.query;

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Read current version
-CURRENT_VERSION=$(node -p "require('./version.json').version")
+CURRENT_VERSION=$(node -p "require('./public/version.json').version")
 
 # Increment patch version
 NEW_VERSION=$(node -p "
@@ -13,8 +13,8 @@ NEW_VERSION=$(node -p "
 node -p "
   const fs = require('fs');
   const version = '$NEW_VERSION';
-  fs.writeFileSync('./version.json', JSON.stringify({ version }, null, 2));
+  fs.writeFileSync('./public/version.json', JSON.stringify({ version }, null, 2));
 "
 
 # Add version.json to the commit
-git add version.json
+git add public/version.json
