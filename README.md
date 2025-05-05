@@ -17,6 +17,7 @@ A minimalistic weather application with map integration and multilingual support
 - Persistent state through URL parameters
 - Progressive Web App (PWA) support - can be installed on devices and works offline
 - Automatic version tracking with auto-refresh on updates
+- Test commit for version tracking
 
 ## Version Tracking
 
