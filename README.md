@@ -6,13 +6,17 @@ A minimalistic weather application with map integration and multilingual support
 
 ## Features
 
-- Interactive map interface
-- Real-time weather data
-- 5-hour forecast
-- English and Hebrew language support
-- Responsive design
-- Loading spinner
+- Interactive map interface with OpenStreetMap integration
+- Real-time weather data with concurrent API calls for current weather, forecast, and location data
+- 5-hour forecast with hourly updates
+- URL synchronization with map position and zoom level for easy sharing and refreshing
+- Live location detection with browser geolocation
+- Full bilingual support (English and Hebrew) with automatic RTL layout
+- Responsive design that works on all devices
+- Loading spinner for API requests
 - Minimizable weather info popup
+- Persistent state through URL parameters
+- Service Worker support for offline capabilities
 
 ## Local Development Setup
 
