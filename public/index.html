@@ -47,9 +47,21 @@
         color: #666;
         padding: 5px;
         z-index: 1001;
+        transition: transform 0.3s ease;
       }
       #weather-info .toggle-size:hover {
         color: #333;
+      }
+      #weather-info .toggle-size.spinning {
+        animation: spin 0.3s ease;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(180deg);
+        }
       }
       .current-weather {
         margin-bottom: 15px;
