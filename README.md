@@ -19,6 +19,7 @@ A minimalistic weather application with map integration and multilingual support
 - Automatic version tracking with auto-refresh on updates
 - Test commit for version tracking
 - Second test commit for version tracking
+- Test commit for version tags
 
 ## Version Tracking
 
