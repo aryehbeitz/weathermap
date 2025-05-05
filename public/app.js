@@ -95,7 +95,9 @@ function initMap() {
 }
 
 async function fetchWeather(lat, lng) {
+  const loadingSpinner = document.getElementById("loading-spinner");
   try {
+    loadingSpinner.classList.remove("hidden");
     const [currentResponse, forecastResponse, cityNameResponse] =
       await Promise.all([
         fetch(
@@ -181,6 +183,8 @@ async function fetchWeather(lat, lng) {
   } catch (error) {
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+  } finally {
+    loadingSpinner.classList.add("hidden");
   }
 }
 
