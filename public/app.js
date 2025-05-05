@@ -108,32 +108,46 @@ function initMap() {
   });
 }
 
+function logMessage(message) {
+  const logBox = document.getElementById("log-box");
+  if (!logBox) return;
+  logBox.classList.remove("hidden");
+  logBox.innerHTML += `<div>${message}</div>`;
+  logBox.scrollTop = logBox.scrollHeight;
+}
+
+function clearLog() {
+  const logBox = document.getElementById("log-box");
+  if (!logBox) return;
+  logBox.innerHTML = "";
+  logBox.classList.add("hidden");
+}
+
 async function fetchWeather(lat, lng) {
-  const loadingSpinner = document.getElementById("loading-spinner");
+  clearLog();
+  logMessage(
+    `Sending GET to /api/weather?lat=${lat}&lon=${lng}&lang=${currentLang}`
+  );
+  logMessage(
+    `Sending GET to /api/forecast?lat=${lat}&lon=${lng}&lang=${currentLang}`
+  );
+  logMessage(
+    `Sending GET to /api/city-name?lat=${lat}&lon=${lng}&lang=${currentLang}`
+  );
   try {
-    loadingSpinner.classList.remove("hidden");
     const [currentResponse, forecastResponse, cityNameResponse] =
       await Promise.all([
-        fetch(
-          `/api/weather?lat=${lat}&lon=${lng}&lang=${
-            currentLang === "he" ? "he" : "en"
-          }`
-        ),
-        fetch(
-          `/api/forecast?lat=${lat}&lon=${lng}&lang=${
-            currentLang === "he" ? "he" : "en"
-          }`
-        ),
-        fetch(
-          `/api/city-name?lat=${lat}&lon=${lng}&lang=${
-            currentLang === "he" ? "he" : "en"
-          }`
-        ),
+        fetch(`/api/weather?lat=${lat}&lon=${lng}&lang=${currentLang}`),
+        fetch(`/api/forecast?lat=${lat}&lon=${lng}&lang=${currentLang}`),
+        fetch(`/api/city-name?lat=${lat}&lon=${lng}&lang=${currentLang}`),
       ]);
-
+    logMessage("Waiting for responses...");
     const currentData = await currentResponse.json();
+    logMessage("Response received for /api/weather");
     const forecastData = await forecastResponse.json();
+    logMessage("Response received for /api/forecast");
     const cityData = await cityNameResponse.json();
+    logMessage("Response received for /api/city-name");
 
     if (currentData.error || forecastData.error || cityData.error) {
       throw new Error(
@@ -211,11 +225,9 @@ async function fetchWeather(lat, lng) {
         toggleButton.classList.remove("spinning");
       }, 300); // Match animation duration
     });
+    clearLog();
   } catch (error) {
-    weatherInfo.style.display = "block";
-    weatherInfo.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-  } finally {
-    loadingSpinner.classList.add("hidden");
+    logMessage(`<span style='color:red'>Error: ${error.message}</span>`);
   }
 }
 

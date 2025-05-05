@@ -213,11 +213,34 @@
           transform: rotate(360deg);
         }
       }
+      #log-box {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        background: #222;
+        color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        min-width: 320px;
+        max-width: 90vw;
+        max-height: 60vh;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      #log-box.hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <div id="map"></div>
     <div id="weather-info"></div>
+    <div id="log-box" class="hidden"></div>
     <div id="loading-spinner" class="hidden">
       <div class="spinner"></div>
     </div>
