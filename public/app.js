@@ -151,6 +151,7 @@ async function fetchWeather(lat, lng) {
         const time = date.toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
+          hour12: false,
         });
         const windSpeed = (item.wind.speed * 3.6).toFixed(1);
         const windDir = getWindDirection(item.wind.deg);
