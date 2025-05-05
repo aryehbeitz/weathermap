@@ -2,6 +2,8 @@
 
 A minimalistic weather application with map integration and multilingual support.
 
+**Live Site:** [https://weather.aryeh.site/](https://weather.aryeh.site/)
+
 ## Features
 
 - Interactive map interface
