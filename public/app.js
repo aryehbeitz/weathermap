@@ -2,6 +2,29 @@ let map;
 let marker;
 const weatherInfo = document.getElementById("weather-info");
 
+function getWindDirection(degrees) {
+  const directions = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+  ];
+  const index = Math.round(degrees / 22.5) % 16;
+  return directions[index];
+}
+
 function initMap() {
   map = L.map("map").setView([0, 0], 2);
 
@@ -31,13 +54,20 @@ async function fetchWeather(lat, lng) {
       throw new Error(data.error);
     }
 
+    // Convert m/s to km/h (1 m/s = 3.6 km/h)
+    const windSpeedKmh = (data.wind.speed * 3.6).toFixed(1);
+    const windGustsKmh = data.wind.gust
+      ? `, gusts up to ${(data.wind.gust * 3.6).toFixed(1)} km/h`
+      : "";
+    const windDirection = getWindDirection(data.wind.deg);
+
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `
             <h3>${data.name}</h3>
             <p>Temperature: ${data.main.temp}°C</p>
             <p>Weather: ${data.weather[0].description}</p>
             <p>Humidity: ${data.main.humidity}%</p>
-            <p>Wind: ${data.wind.speed} m/s, ${data.wind.deg}°</p>
+            <p>Wind: ${windSpeedKmh} km/h, Blowing from the ${windDirection}${windGustsKmh}</p>
         `;
   } catch (error) {
     weatherInfo.style.display = "block";
