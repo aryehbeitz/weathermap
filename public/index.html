@@ -34,7 +34,10 @@
       }
       #weather-info.minimized {
         max-height: 150px;
-        overflow: hidden;
+        overflow-y: auto;
+      }
+      #weather-info.minimized .forecast-container {
+        display: none;
       }
       #weather-info .toggle-size {
         position: absolute;
@@ -151,6 +154,7 @@
         }
         #weather-info.minimized {
           max-height: 120px;
+          overflow-y: auto;
         }
         [dir="rtl"] #weather-info {
           right: 10px;
