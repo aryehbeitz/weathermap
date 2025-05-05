@@ -20,18 +20,26 @@ A minimalistic weather application with map integration and multilingual support
 # Update package list
 sudo apt-get update
 
-# Install Node.js and npm
-sudo apt-get install -y nodejs npm
-
-# Install Docker
+# Install required packages
 sudo apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
     gnupg \
-    lsb-release
+    lsb-release \
+    build-essential
 
-# Add Docker's official GPG key
+# Install NVM (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+# Reload shell configuration
+source ~/.bashrc  # or source ~/.zshrc if using zsh
+
+# Install and use Node.js LTS
+nvm install --lts
+nvm use --lts
+
+# Install Docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 # Set up the stable repository
@@ -51,7 +59,11 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo usermod -aG docker $USER
 ```
 
-Note: You'll need to log out and back in for the group changes to take effect.
+Note:
+
+- You'll need to log out and back in for the group changes to take effect
+- After installing NVM, you may need to restart your terminal or run `source ~/.bashrc` (or `source ~/.zshrc` if using zsh)
+- The Node.js version will be automatically managed by NVM based on the project's `.nvmrc` file
 
 ## Local Development
 
