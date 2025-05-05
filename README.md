@@ -184,3 +184,7 @@ This application uses the OpenWeather Current Weather API:
   - OpenStreetMap
   - Leaflet.js for map interaction
   - Vanilla JavaScript
+
+## Credits
+
+<a href="https://www.flaticon.com/free-icons/weather" title="weather icons">Weather icons created by iconixar - Flaticon</a>
