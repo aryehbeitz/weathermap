@@ -1,6 +1,7 @@
 let map;
 let marker;
 const weatherInfo = document.getElementById("weather-info");
+let currentLang = "en";
 
 function getWindDirection(degrees) {
   const directions = [
@@ -33,6 +34,29 @@ function updateURL(lat, lng, zoom) {
   window.history.pushState({}, "", url);
 }
 
+function createLanguageToggle() {
+  const button = L.control({ position: "topright" });
+  button.onAdd = function () {
+    const div = L.DomUtil.create("div", "language-toggle");
+    div.innerHTML = `<button>${translations[currentLang].toggleLanguage}</button>`;
+    div.onclick = toggleLanguage;
+    return div;
+  };
+  button.addTo(map);
+}
+
+function toggleLanguage() {
+  currentLang = currentLang === "en" ? "he" : "en";
+  // Update the toggle button text
+  document.querySelector(".language-toggle button").textContent =
+    translations[currentLang].toggleLanguage;
+  // If there's a marker, refresh the weather data with new language
+  if (marker) {
+    const latlng = marker.getLatLng();
+    fetchWeather(latlng.lat, latlng.lng);
+  }
+}
+
 function initMap() {
   // Get initial position from URL or use defaults
   const urlParams = new URLSearchParams(window.location.search);
@@ -45,6 +69,9 @@ function initMap() {
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
   }).addTo(map);
+
+  // Add language toggle button
+  createLanguageToggle();
 
   // Update URL when map moves
   map.on("moveend", () => {
@@ -67,7 +94,9 @@ function initMap() {
 
 async function fetchWeather(lat, lng) {
   try {
-    const response = await fetch(`/api/weather?lat=${lat}&lon=${lng}`);
+    const response = await fetch(
+      `/api/weather?lat=${lat}&lon=${lng}&lang=${currentLang}`
+    );
     const data = await response.json();
 
     if (data.error) {
@@ -77,17 +106,19 @@ async function fetchWeather(lat, lng) {
     // Convert m/s to km/h (1 m/s = 3.6 km/h)
     const windSpeedKmh = (data.wind.speed * 3.6).toFixed(1);
     const windGustsKmh = data.wind.gust
-      ? `, gusts up to ${(data.wind.gust * 3.6).toFixed(1)} km/h`
+      ? `, ${translations[currentLang].gustsUpTo} ${(
+          data.wind.gust * 3.6
+        ).toFixed(1)} ${translations[currentLang].kmh}`
       : "";
     const windDirection = getWindDirection(data.wind.deg);
 
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `
             <h3>${data.name}</h3>
-            <p>Temperature: ${data.main.temp}°C</p>
-            <p>Weather: ${data.weather[0].description}</p>
-            <p>Humidity: ${data.main.humidity}%</p>
-            <p>Wind: ${windSpeedKmh} km/h, Blowing from the ${windDirection}${windGustsKmh}</p>
+            <p>${translations[currentLang].temperature}: ${data.main.temp}${translations[currentLang].celsius}</p>
+            <p>${translations[currentLang].weather}: ${data.weather[0].description}</p>
+            <p>${translations[currentLang].humidity}: ${data.main.humidity}${translations[currentLang].percent}</p>
+            <p>${translations[currentLang].wind}: ${windSpeedKmh} ${translations[currentLang].kmh}, ${translations[currentLang].blowingFrom} ${windDirection}${windGustsKmh}</p>
         `;
   } catch (error) {
     weatherInfo.style.display = "block";

@@ -1,0 +1,26 @@
+const translations = {
+  en: {
+    temperature: "Temperature",
+    weather: "Weather",
+    humidity: "Humidity",
+    wind: "Wind",
+    blowingFrom: "Blowing from the",
+    gustsUpTo: "gusts up to",
+    kmh: "km/h",
+    celsius: "°C",
+    percent: "%",
+    toggleLanguage: "Toggle Hebrew",
+  },
+  he: {
+    temperature: "טמפרטורה",
+    weather: "מזג אוויר",
+    humidity: "לחות",
+    wind: "רוח",
+    blowingFrom: "נושבת מכיוון",
+    gustsUpTo: "משבים עד",
+    kmh: 'קמ"ש',
+    celsius: "°צ",
+    percent: "%",
+    toggleLanguage: "החלף לעברית",
+  },
+};
