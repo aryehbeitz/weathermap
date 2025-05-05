@@ -108,45 +108,7 @@ function initMap() {
   });
 }
 
-function logMessage(message) {
-  const logBox = document.getElementById("log-box");
-  if (!logBox) return;
-  const timestamp = new Date().toLocaleTimeString();
-  const wasScrolledToBottom =
-    logBox.scrollHeight - logBox.scrollTop === logBox.clientHeight;
-  logBox.innerHTML += `<div>[${timestamp}] ${message}</div>`;
-  if (wasScrolledToBottom) {
-    logBox.scrollTop = logBox.scrollHeight;
-  }
-}
-
-function clearLog() {
-  const logBox = document.getElementById("log-box");
-  if (!logBox) return;
-  logBox.innerHTML = "";
-}
-
-// Initialize log box
-document.addEventListener("DOMContentLoaded", () => {
-  const logBox = document.getElementById("log-box");
-  if (logBox) {
-    logBox.innerHTML = `<div>[${new Date().toLocaleTimeString()}] Application started</div>`;
-    // Auto-scroll to bottom on initialization
-    logBox.scrollTop = logBox.scrollHeight;
-  }
-});
-
 async function fetchWeather(lat, lng) {
-  clearLog();
-  logMessage(
-    `Sending GET to /api/weather?lat=${lat}&lon=${lng}&lang=${currentLang}`
-  );
-  logMessage(
-    `Sending GET to /api/forecast?lat=${lat}&lon=${lng}&lang=${currentLang}`
-  );
-  logMessage(
-    `Sending GET to /api/city-name?lat=${lat}&lon=${lng}&lang=${currentLang}`
-  );
   try {
     const [currentResponse, forecastResponse, cityNameResponse] =
       await Promise.all([
@@ -154,13 +116,10 @@ async function fetchWeather(lat, lng) {
         fetch(`/api/forecast?lat=${lat}&lon=${lng}&lang=${currentLang}`),
         fetch(`/api/city-name?lat=${lat}&lon=${lng}&lang=${currentLang}`),
       ]);
-    logMessage("Waiting for responses...");
+
     const currentData = await currentResponse.json();
-    logMessage("Response received for /api/weather");
     const forecastData = await forecastResponse.json();
-    logMessage("Response received for /api/forecast");
     const cityData = await cityNameResponse.json();
-    logMessage("Response received for /api/city-name");
 
     if (currentData.error || forecastData.error || cityData.error) {
       throw new Error(
@@ -238,9 +197,8 @@ async function fetchWeather(lat, lng) {
         toggleButton.classList.remove("spinning");
       }, 300); // Match animation duration
     });
-    clearLog();
   } catch (error) {
-    logMessage(`<span style='color:red'>Error: ${error.message}</span>`);
+    console.error("Error fetching weather data:", error);
   }
 }
 

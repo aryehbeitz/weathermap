@@ -183,80 +183,11 @@
           right: 10px;
         }
       }
-      #loading-spinner {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-        background: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-      #loading-spinner.hidden {
-        display: none;
-      }
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #3498db;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      #log-box {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        background: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        padding: 10px;
-        font-family: monospace;
-        font-size: 14px;
-        line-height: 1.5;
-        max-height: 200px;
-        overflow-y: auto;
-        display: none; /* Hidden by default */
-      }
-      #log-box div {
-        padding: 2px 5px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      #log-box div:last-child {
-        border-bottom: none;
-      }
-      /* Desktop styles */
-      @media (min-width: 769px) {
-        #log-box {
-          display: block;
-        }
-      }
-      /* Mobile styles */
-      @media (max-width: 768px) {
-        #log-box {
-          display: none;
-        }
-      }
     </style>
   </head>
   <body>
     <div id="map"></div>
     <div id="weather-info"></div>
-    <div id="log-box" class="hidden"></div>
-    <div id="loading-spinner" class="hidden">
-      <div class="spinner"></div>
-    </div>
     <div id="language-toggle">
       <button>English</button>
       <button id="find-location">📍 Find My Location</button>

@@ -13,7 +13,6 @@ A minimalistic weather application with map integration and multilingual support
 - Live location detection with browser geolocation
 - Full bilingual support (English and Hebrew) with automatic RTL layout
 - Responsive design that works on all devices
-- Loading spinner for better user experience
 - Minimizable weather info popup
 - Persistent state through URL parameters
 - Progressive Web App (PWA) support - can be installed on devices and works offline
