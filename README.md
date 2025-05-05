@@ -1,6 +1,68 @@
-# Weather Map Application
+# Weather App
 
-A minimalistic weather application that allows users to select locations on an OpenStreetMap and view weather information.
+A minimalistic weather application with map integration and multilingual support.
+
+## Features
+
+- Interactive map interface
+- Real-time weather data
+- 5-hour forecast
+- English and Hebrew language support
+- Responsive design
+- Loading spinner
+- Minimizable weather info popup
+
+## Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000)
+
+## Docker Deployment
+
+### Prerequisites
+
+- Docker installed on your system
+- Git (optional, for cloning the repository)
+
+### Building the Docker Image
+
+```bash
+# Clone the repository (if you haven't already)
+git clone <repository-url>
+cd weather
+
+# Build the Docker image
+docker build -t weather-app .
+```
+
+### Running the Container
+
+```bash
+# Run the container on port 3001
+docker run -p 3001:3001 weather-app
+```
+
+The app will be available at [http://localhost:3001](http://localhost:3001)
+
+### Environment Variables
+
+The following environment variables are required:
+
+- `OPENWEATHER_API_KEY`: Your OpenWeatherMap API key
+- `PORT`: Port number (defaults to 3000 in development, 3001 in Docker)
+
+### Notes
+
+- The Dockerfile sets the environment variable `PORT=3001` so the server listens on the correct port.
+- If you want to change the port, update the `EXPOSE` and `ENV PORT` lines in the Dockerfile, and adjust the `docker run` command accordingly.
+- Make sure to set your OpenWeatherMap API key in the `.env` file before building the Docker image.
 
 ## Setup Instructions
 
@@ -30,18 +92,6 @@ npm start
 ```
 
 4. Open your browser and navigate to `http://localhost:3000`
-
-## Features
-
-- Interactive OpenStreetMap using Leaflet
-- Click anywhere on the map to get weather information
-- Displays:
-  - Location name
-  - Temperature in Celsius
-  - Weather description
-  - Humidity percentage
-  - Wind speed and direction
-- Clean and minimalistic UI
 
 ## API Usage
 
