@@ -50,6 +50,8 @@ function toggleLanguage() {
   // Update the toggle button text
   document.querySelector(".language-toggle button").textContent =
     translations[currentLang].toggleLanguage;
+  // Set RTL for Hebrew
+  document.body.dir = currentLang === "he" ? "rtl" : "ltr";
   // If there's a marker, refresh the weather data with new language
   if (marker) {
     const latlng = marker.getLatLng();
@@ -95,7 +97,9 @@ function initMap() {
 async function fetchWeather(lat, lng) {
   try {
     const response = await fetch(
-      `/api/weather?lat=${lat}&lon=${lng}&lang=${currentLang}`
+      `/api/weather?lat=${lat}&lon=${lng}&lang=${
+        currentLang === "he" ? "he" : "en"
+      }`
     );
     const data = await response.json();
 
