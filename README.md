@@ -14,9 +14,21 @@ A minimalistic weather application with map integration and multilingual support
 - Loading spinner
 - Minimizable weather info popup
 
-## Prerequisites
+## Local Development
 
-### Linux Installation
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000)
+
+## Docker Setup (Linux)
+
+The following instructions are for setting up Docker on Linux, which is required for deployment:
 
 ```bash
 # Update package list
@@ -30,16 +42,6 @@ sudo apt-get install -y \
     gnupg \
     lsb-release \
     build-essential
-
-# Install NVM (Node Version Manager)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-
-# Reload shell configuration
-source ~/.bashrc  # or source ~/.zshrc if using zsh
-
-# Install and use Node.js LTS
-nvm install --lts
-nvm use --lts
 
 # Install Docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -64,20 +66,8 @@ sudo usermod -aG docker $USER
 Note:
 
 - You'll need to log out and back in for the group changes to take effect
-- After installing NVM, you may need to restart your terminal or run `source ~/.bashrc` (or `source ~/.zshrc` if using zsh)
-- The Node.js version will be automatically managed by NVM based on the project's `.nvmrc` file
-
-## Local Development
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-The app will be available at [http://localhost:3000](http://localhost:3000)
+- These instructions are specifically for setting up Docker on Linux systems
+- For development on other platforms, Docker Desktop is recommended
 
 ## Docker Deployment
 
