@@ -12,6 +12,47 @@ A minimalistic weather application with map integration and multilingual support
 - Loading spinner
 - Minimizable weather info popup
 
+## Prerequisites
+
+### Linux Installation
+
+```bash
+# Update package list
+sudo apt-get update
+
+# Install Node.js and npm
+sudo apt-get install -y nodejs npm
+
+# Install Docker
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+# Add Docker's official GPG key
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# Set up the stable repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install Docker Engine
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+
+# Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Add your user to the docker group
+sudo usermod -aG docker $USER
+```
+
+Note: You'll need to log out and back in for the group changes to take effect.
+
 ## Local Development
 
 ```bash
@@ -26,26 +67,44 @@ The app will be available at [http://localhost:3000](http://localhost:3000)
 
 ## Docker Deployment
 
-### Prerequisites
+### Using Docker Compose (Recommended)
 
-- Docker installed on your system
-- Git (optional, for cloning the repository)
-
-### Building the Docker Image
+1. Clone the repository:
 
 ```bash
-# Clone the repository (if you haven't already)
 git clone <repository-url>
 cd weather
+```
 
-# Build the Docker image
+2. Create a `.env` file with your OpenWeather API key:
+
+```bash
+echo "OPENWEATHER_API_KEY=your_api_key_here" > .env
+```
+
+3. Start the application:
+
+```bash
+docker-compose up -d
+```
+
+4. To stop the application:
+
+```bash
+docker-compose down
+```
+
+### Using Docker Directly
+
+1. Build the Docker image:
+
+```bash
 docker build -t weather-app .
 ```
 
-### Running the Container
+2. Run the container:
 
 ```bash
-# Run the container on port 3001
 docker run -p 3001:3001 weather-app
 ```
 
@@ -63,6 +122,7 @@ The following environment variables are required:
 - The Dockerfile sets the environment variable `PORT=3001` so the server listens on the correct port.
 - If you want to change the port, update the `EXPOSE` and `ENV PORT` lines in the Dockerfile, and adjust the `docker run` command accordingly.
 - Make sure to set your OpenWeatherMap API key in the `.env` file before building the Docker image.
+- Docker Compose automatically mounts the current directory as a volume, allowing for live code changes without rebuilding the container.
 
 ## Setup Instructions
 
