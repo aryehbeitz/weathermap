@@ -14,13 +14,30 @@ A minimalistic weather application with map integration and multilingual support
 - Loading spinner
 - Minimizable weather info popup
 
-## Local Development
+## Local Development Setup
+
+1. Install dependencies:
 
 ```bash
-# Install dependencies
 npm install
+```
 
-# Start development server
+2. Configure environment variables:
+
+   - Copy `example.env` to `.env`:
+
+   ```bash
+   cp example.env .env
+   ```
+
+   - Edit `.env` file to customize settings:
+     - `OPENWEATHER_API_KEY`: Your OpenWeather API key (default provided)
+     - `PORT`: Server port (default: 3000)
+     - `LANG`: Language for weather descriptions (default: en)
+
+3. Start the development server:
+
+```bash
 npm run dev
 ```
 
@@ -127,35 +144,6 @@ The following environment variables are required:
 - If you want to change the port, update the `EXPOSE` and `ENV PORT` lines in the Dockerfile, and adjust the `docker run` command accordingly.
 - Make sure to set your OpenWeatherMap API key in the `.env` file before building the Docker image.
 - Docker Compose automatically mounts the current directory as a volume, allowing for live code changes without rebuilding the container.
-
-## Setup Instructions
-
-1. Install dependencies:
-
-```bash
-npm install
-```
-
-2. Configure environment variables:
-
-   - Copy `example.env` to `.env`:
-
-   ```bash
-   cp example.env .env
-   ```
-
-   - Edit `.env` file to customize settings:
-     - `OPENWEATHER_API_KEY`: Your OpenWeather API key (default provided)
-     - `PORT`: Server port (default: 3000)
-     - `LANG`: Language for weather descriptions (default: en)
-
-3. Start the server:
-
-```bash
-npm start
-```
-
-4. Open your browser and navigate to `http://localhost:3000`
 
 ## API Usage
 
