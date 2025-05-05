@@ -40,6 +40,20 @@ app.get("/api/forecast", async (req, res) => {
   }
 });
 
+app.get("/api/city-name", async (req, res) => {
+  const { lat, lon, lang } = req.query;
+  try {
+    const response = await axios.get(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=${
+        lang || "en"
+      }`
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

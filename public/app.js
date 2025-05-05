@@ -96,25 +96,41 @@ function initMap() {
 
 async function fetchWeather(lat, lng) {
   try {
-    const [currentResponse, forecastResponse] = await Promise.all([
-      fetch(
-        `/api/weather?lat=${lat}&lon=${lng}&lang=${
-          currentLang === "he" ? "he" : "en"
-        }`
-      ),
-      fetch(
-        `/api/forecast?lat=${lat}&lon=${lng}&lang=${
-          currentLang === "he" ? "he" : "en"
-        }`
-      ),
-    ]);
+    const [currentResponse, forecastResponse, cityNameResponse] =
+      await Promise.all([
+        fetch(
+          `/api/weather?lat=${lat}&lon=${lng}&lang=${
+            currentLang === "he" ? "he" : "en"
+          }`
+        ),
+        fetch(
+          `/api/forecast?lat=${lat}&lon=${lng}&lang=${
+            currentLang === "he" ? "he" : "en"
+          }`
+        ),
+        fetch(
+          `/api/city-name?lat=${lat}&lon=${lng}&lang=${
+            currentLang === "he" ? "he" : "en"
+          }`
+        ),
+      ]);
 
     const currentData = await currentResponse.json();
     const forecastData = await forecastResponse.json();
+    const cityData = await cityNameResponse.json();
 
-    if (currentData.error || forecastData.error) {
-      throw new Error(currentData.error || forecastData.error);
+    if (currentData.error || forecastData.error || cityData.error) {
+      throw new Error(
+        currentData.error || forecastData.error || cityData.error
+      );
     }
+
+    // Get localized city name
+    const cityName =
+      cityData.address?.city ||
+      cityData.address?.town ||
+      cityData.address?.village ||
+      currentData.name;
 
     // Convert m/s to km/h (1 m/s = 3.6 km/h)
     const windSpeedKmh = (currentData.wind.speed * 3.6).toFixed(1);
@@ -149,7 +165,7 @@ async function fetchWeather(lat, lng) {
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `
       <div class="current-weather">
-        <h3>${currentData.name}</h3>
+        <h3>${cityName}</h3>
         <p>${translations[currentLang].temperature}: ${currentData.main.temp}${translations[currentLang].celsius}</p>
         <p>${translations[currentLang].weather}: ${currentData.weather[0].description}</p>
         <p>${translations[currentLang].humidity}: ${currentData.main.humidity}${translations[currentLang].percent}</p>
