@@ -112,8 +112,13 @@ function logMessage(message) {
   const logBox = document.getElementById("log-box");
   if (!logBox) return;
   logBox.classList.remove("hidden");
-  logBox.innerHTML += `<div>${message}</div>`;
-  logBox.scrollTop = logBox.scrollHeight;
+  const timestamp = new Date().toLocaleTimeString();
+  const wasScrolledToBottom =
+    logBox.scrollHeight - logBox.scrollTop === logBox.clientHeight;
+  logBox.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+  if (wasScrolledToBottom) {
+    logBox.scrollTop = logBox.scrollHeight;
+  }
 }
 
 function clearLog() {
@@ -122,6 +127,16 @@ function clearLog() {
   logBox.innerHTML = "";
   logBox.classList.add("hidden");
 }
+
+// Initialize log box
+document.addEventListener("DOMContentLoaded", () => {
+  const logBox = document.getElementById("log-box");
+  if (logBox) {
+    logBox.innerHTML = `<div>[${new Date().toLocaleTimeString()}] Application started</div>`;
+    // Auto-scroll to bottom on initialization
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+});
 
 async function fetchWeather(lat, lng) {
   clearLog();

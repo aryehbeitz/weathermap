@@ -215,25 +215,42 @@
       }
       #log-box {
         position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        bottom: 0;
+        left: 0;
+        right: 0;
         z-index: 1000;
-        background: #222;
+        background: rgba(0, 0, 0, 0.8);
         color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        min-width: 320px;
-        max-width: 90vw;
-        max-height: 60vh;
-        overflow-y: auto;
+        padding: 10px;
         font-family: monospace;
         font-size: 14px;
         line-height: 1.5;
+        max-height: 200px;
+        overflow-y: auto;
+        transition: transform 0.3s ease;
+        display: none; /* Hidden by default */
       }
-      #log-box.hidden {
-        display: none;
+      #log-box div {
+        padding: 2px 5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      #log-box div:last-child {
+        border-bottom: none;
+      }
+      /* Desktop styles */
+      @media (min-width: 769px) {
+        #log-box {
+          display: block;
+        }
+        #log-box.hidden {
+          transform: translateY(100%);
+        }
+      }
+      /* Mobile styles */
+      @media (max-width: 768px) {
+        #log-box {
+          display: none;
+        }
       }
     </style>
   </head>
