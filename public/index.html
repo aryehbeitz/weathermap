@@ -32,6 +32,10 @@
         max-height: 80vh;
         overflow-y: auto;
       }
+      #weather-info .content {
+        position: relative;
+        padding-top: 30px;
+      }
       #weather-info.minimized {
         max-height: 150px;
         overflow-y: auto;
@@ -40,10 +44,10 @@
         display: none;
       }
       #weather-info .toggle-size {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        background: white;
         border: none;
         cursor: pointer;
         font-size: 16px;
@@ -51,9 +55,12 @@
         padding: 5px;
         z-index: 1001;
         transition: transform 0.3s ease;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
       #weather-info .toggle-size:hover {
         color: #333;
+        background: #f5f5f5;
       }
       #weather-info .toggle-size.spinning {
         animation: spin 0.3s ease;
@@ -140,7 +147,7 @@
       }
       [dir="rtl"] #weather-info .toggle-size {
         right: auto;
-        left: 10px;
+        left: 30px;
       }
       /* Mobile styles */
       @media (max-width: 768px) {

@@ -168,17 +168,19 @@ async function fetchWeather(lat, lng) {
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `
       <button class="toggle-size" title="${translations[currentLang].toggleSize}">▼</button>
-      <div class="current-weather">
-        <h3>${cityName}</h3>
-        <p>${translations[currentLang].temperature}: ${currentData.main.temp}${translations[currentLang].celsius}</p>
-        <p>${translations[currentLang].weather}: ${currentData.weather[0].description}</p>
-        <p>${translations[currentLang].humidity}: ${currentData.main.humidity}${translations[currentLang].percent}</p>
-        <p>${translations[currentLang].wind}: ${windSpeedKmh} ${translations[currentLang].kmh}, ${translations[currentLang].blowingFrom} ${windDirection}${windGustsKmh}</p>
-      </div>
-      <div class="forecast-container">
-        <h4>${translations[currentLang].forecast}</h4>
-        <div class="forecast-items">
-          ${forecastItems}
+      <div class="content">
+        <div class="current-weather">
+          <h3>${cityName}</h3>
+          <p>${translations[currentLang].temperature}: ${currentData.main.temp}${translations[currentLang].celsius}</p>
+          <p>${translations[currentLang].weather}: ${currentData.weather[0].description}</p>
+          <p>${translations[currentLang].humidity}: ${currentData.main.humidity}${translations[currentLang].percent}</p>
+          <p>${translations[currentLang].wind}: ${windSpeedKmh} ${translations[currentLang].kmh}, ${translations[currentLang].blowingFrom} ${windDirection}${windGustsKmh}</p>
+        </div>
+        <div class="forecast-container">
+          <h4>${translations[currentLang].forecast}</h4>
+          <div class="forecast-items">
+            ${forecastItems}
+          </div>
         </div>
       </div>
     `;
