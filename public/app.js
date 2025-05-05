@@ -25,12 +25,32 @@ function getWindDirection(degrees) {
   return directions[index];
 }
 
+function updateURL(lat, lng, zoom) {
+  const url = new URL(window.location);
+  url.searchParams.set("lat", lat.toFixed(6));
+  url.searchParams.set("lng", lng.toFixed(6));
+  url.searchParams.set("zoom", zoom);
+  window.history.pushState({}, "", url);
+}
+
 function initMap() {
-  map = L.map("map").setView([0, 0], 2);
+  // Get initial position from URL or use defaults
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialLat = parseFloat(urlParams.get("lat")) || 0;
+  const initialLng = parseFloat(urlParams.get("lng")) || 0;
+  const initialZoom = parseInt(urlParams.get("zoom")) || 2;
+
+  map = L.map("map").setView([initialLat, initialLng], initialZoom);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
   }).addTo(map);
+
+  // Update URL when map moves
+  map.on("moveend", () => {
+    const center = map.getCenter();
+    updateURL(center.lat, center.lng, map.getZoom());
+  });
 
   map.on("click", (e) => {
     const lat = e.latlng.lat;
