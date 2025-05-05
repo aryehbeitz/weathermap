@@ -96,34 +96,72 @@ function initMap() {
 
 async function fetchWeather(lat, lng) {
   try {
-    const response = await fetch(
-      `/api/weather?lat=${lat}&lon=${lng}&lang=${
-        currentLang === "he" ? "he" : "en"
-      }`
-    );
-    const data = await response.json();
+    const [currentResponse, forecastResponse] = await Promise.all([
+      fetch(
+        `/api/weather?lat=${lat}&lon=${lng}&lang=${
+          currentLang === "he" ? "he" : "en"
+        }`
+      ),
+      fetch(
+        `/api/forecast?lat=${lat}&lon=${lng}&lang=${
+          currentLang === "he" ? "he" : "en"
+        }`
+      ),
+    ]);
 
-    if (data.error) {
-      throw new Error(data.error);
+    const currentData = await currentResponse.json();
+    const forecastData = await forecastResponse.json();
+
+    if (currentData.error || forecastData.error) {
+      throw new Error(currentData.error || forecastData.error);
     }
 
     // Convert m/s to km/h (1 m/s = 3.6 km/h)
-    const windSpeedKmh = (data.wind.speed * 3.6).toFixed(1);
-    const windGustsKmh = data.wind.gust
+    const windSpeedKmh = (currentData.wind.speed * 3.6).toFixed(1);
+    const windGustsKmh = currentData.wind.gust
       ? `, ${translations[currentLang].gustsUpTo} ${(
-          data.wind.gust * 3.6
+          currentData.wind.gust * 3.6
         ).toFixed(1)} ${translations[currentLang].kmh}`
       : "";
-    const windDirection = getWindDirection(data.wind.deg);
+    const windDirection = getWindDirection(currentData.wind.deg);
+
+    // Process forecast data
+    const forecastItems = forecastData.list
+      .slice(0, 5)
+      .map((item) => {
+        const date = new Date(item.dt * 1000);
+        const time = date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        const windSpeed = (item.wind.speed * 3.6).toFixed(1);
+        const windDir = getWindDirection(item.wind.deg);
+        return `
+        <div class="forecast-item">
+          <div class="forecast-time">${time}</div>
+          <div class="forecast-temp">${item.main.temp}${translations[currentLang].celsius}</div>
+          <div class="forecast-wind">${windSpeed} ${translations[currentLang].kmh} ${windDir}</div>
+        </div>
+      `;
+      })
+      .join("");
 
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `
-            <h3>${data.name}</h3>
-            <p>${translations[currentLang].temperature}: ${data.main.temp}${translations[currentLang].celsius}</p>
-            <p>${translations[currentLang].weather}: ${data.weather[0].description}</p>
-            <p>${translations[currentLang].humidity}: ${data.main.humidity}${translations[currentLang].percent}</p>
-            <p>${translations[currentLang].wind}: ${windSpeedKmh} ${translations[currentLang].kmh}, ${translations[currentLang].blowingFrom} ${windDirection}${windGustsKmh}</p>
-        `;
+      <div class="current-weather">
+        <h3>${currentData.name}</h3>
+        <p>${translations[currentLang].temperature}: ${currentData.main.temp}${translations[currentLang].celsius}</p>
+        <p>${translations[currentLang].weather}: ${currentData.weather[0].description}</p>
+        <p>${translations[currentLang].humidity}: ${currentData.main.humidity}${translations[currentLang].percent}</p>
+        <p>${translations[currentLang].wind}: ${windSpeedKmh} ${translations[currentLang].kmh}, ${translations[currentLang].blowingFrom} ${windDirection}${windGustsKmh}</p>
+      </div>
+      <div class="forecast-container">
+        <h4>${translations[currentLang].forecast}</h4>
+        <div class="forecast-items">
+          ${forecastItems}
+        </div>
+      </div>
+    `;
   } catch (error) {
     weatherInfo.style.display = "block";
     weatherInfo.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;

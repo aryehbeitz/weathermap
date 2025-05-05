@@ -13,24 +13,30 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.get("/api/weather", async (req, res) => {
+  const { lat, lon, lang } = req.query;
   try {
-    const { lat, lon, lang } = req.query;
-    if (!lat || !lon) {
-      return res
-        .status(400)
-        .json({ error: "Latitude and longitude are required" });
-    }
-
     const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=${
-        lang || LANG
-      }`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
+        process.env.OPENWEATHER_API_KEY
+      }&units=metric&lang=${lang || process.env.LANG}`
     );
-
     res.json(response.data);
   } catch (error) {
-    console.error("Weather API error:", error);
-    res.status(500).json({ error: "Failed to fetch weather data" });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/api/forecast", async (req, res) => {
+  const { lat, lon, lang } = req.query;
+  try {
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${
+        process.env.OPENWEATHER_API_KEY
+      }&units=metric&lang=${lang || process.env.LANG}`
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
