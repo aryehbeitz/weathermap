@@ -187,12 +187,26 @@
           left: 10px;
         }
         #language-toggle {
-          bottom: 10px;
-          left: 10px;
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100vw;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 0;
+          border-radius: 0;
+          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
         }
-        [dir="rtl"] #language-toggle {
-          left: auto;
-          right: 10px;
+        #language-toggle button {
+          font-size: 18px;
+          padding: 12px 18px;
+        }
+        #version.version {
+          font-size: 16px;
+          margin-left: 16px;
         }
       }
       .version {
