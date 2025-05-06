@@ -2,17 +2,20 @@ class CitySearch {
   constructor() {
     this.searchInput = document.querySelector(".search-input");
     this.resultsContainer = document.querySelector(".autocomplete-results");
+    this.infoToggle = document.querySelector(".info-toggle");
     this.selectedIndex = -1;
     this.debounceTimeout = null;
     this.currentResults = [];
 
     this.setupEventListeners();
+    this.updateToggleVisibility();
   }
 
   setupEventListeners() {
     this.searchInput.addEventListener("input", () => {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => this.handleSearch(), 300);
+      this.updateToggleVisibility();
     });
 
     this.searchInput.addEventListener("keydown", (e) => {
@@ -45,10 +48,22 @@ class CitySearch {
     });
   }
 
+  updateToggleVisibility() {
+    if (!this.infoToggle) return;
+    const hasValue = this.searchInput.value.trim().length > 0;
+    const hasResults = this.currentResults && this.currentResults.length > 0;
+    if (hasValue && hasResults) {
+      this.infoToggle.style.display = "inline-block";
+    } else {
+      this.infoToggle.style.display = "none";
+    }
+  }
+
   async handleSearch() {
     const query = this.searchInput.value.trim();
     if (query.length < 2) {
       this.hideResults();
+      this.updateToggleVisibility();
       return;
     }
 
@@ -56,9 +71,11 @@ class CitySearch {
       const results = await this.searchCities(query);
       this.currentResults = results;
       this.displayResults(results);
+      this.updateToggleVisibility();
     } catch (error) {
       console.error("Error searching cities:", error);
       this.hideResults();
+      this.updateToggleVisibility();
     }
   }
 
@@ -92,6 +109,7 @@ class CitySearch {
 
     if (results.length === 0) {
       this.hideResults();
+      this.updateToggleVisibility();
       return;
     }
 
@@ -106,6 +124,7 @@ class CitySearch {
     });
 
     this.resultsContainer.style.display = "block";
+    this.updateToggleVisibility();
   }
 
   navigateResults(direction) {
@@ -140,6 +159,7 @@ class CitySearch {
       city.state ? city.state + ", " : ""
     }${city.country}`;
     this.hideResults();
+    this.updateToggleVisibility();
 
     // Dispatch a custom event that the main app can listen for
     const event = new CustomEvent("citySelected", {
@@ -157,6 +177,7 @@ class CitySearch {
   hideResults() {
     this.resultsContainer.style.display = "none";
     this.selectedIndex = -1;
+    this.updateToggleVisibility();
   }
 }
 
