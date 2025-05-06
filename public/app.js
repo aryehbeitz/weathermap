@@ -321,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Check if it's a kCLErrorLocationUnknown error
                 if (
                   error.message &&
-                  error.message.includes("kCLErrorLocationUnknown")
+                  error.message.includes("Position update is unavailable")
                 ) {
                   try {
                     // Try IP-based location as fallback
