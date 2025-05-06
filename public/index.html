@@ -267,6 +267,10 @@
           min-width: 60px;
           text-align: right;
         }
+        .info-toggle {
+          font-size: 26px;
+          right: 10px;
+        }
       }
       .version {
         color: #666;
@@ -349,6 +353,23 @@
       textarea {
         font-size: 16px;
       }
+      .info-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+        z-index: 2;
+        padding: 0 4px;
+        color: #666;
+        transition: color 0.2s;
+      }
+      .info-toggle:hover {
+        color: #222;
+      }
     </style>
   </head>
   <body>
@@ -360,6 +381,7 @@
         placeholder="Search for a city..."
         autocomplete="off"
       />
+      <button class="info-toggle" title="Show/hide info">👁️</button>
       <div class="autocomplete-results"></div>
     </div>
     <div id="weather-info"></div>
