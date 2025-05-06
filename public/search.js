@@ -11,6 +11,13 @@ class CitySearch {
 
     this.setupEventListeners();
     this.updateToggleVisibility();
+
+    // Listen for citySelected event (e.g., from Find My Location)
+    document.addEventListener("citySelected", () => {
+      this.citySelected = true;
+      this.dataBoxVisible = true;
+      this.updateToggleVisibility();
+    });
   }
 
   setupEventListeners() {
