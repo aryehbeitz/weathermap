@@ -2,34 +2,11 @@ class CitySearch {
   constructor() {
     this.searchInput = document.querySelector(".search-input");
     this.resultsContainer = document.querySelector(".autocomplete-results");
-    this.cities = [];
     this.selectedIndex = -1;
     this.debounceTimeout = null;
+    this.currentResults = [];
 
-    this.init();
-  }
-
-  async init() {
-    await this.loadCities();
     this.setupEventListeners();
-  }
-
-  async loadCities() {
-    try {
-      const response = await fetch(
-        "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/cities.json"
-      );
-      const data = await response.json();
-      this.cities = data.map((city) => ({
-        name: city.name,
-        country: city.country_name,
-        state: city.state_name,
-        lat: city.latitude,
-        lng: city.longitude,
-      }));
-    } catch (error) {
-      console.error("Error loading cities:", error);
-    }
   }
 
   setupEventListeners() {
@@ -68,28 +45,45 @@ class CitySearch {
     });
   }
 
-  handleSearch() {
+  async handleSearch() {
     const query = this.searchInput.value.trim();
     if (query.length < 2) {
       this.hideResults();
       return;
     }
 
-    const results = this.fuzzySearch(query);
-    this.displayResults(results);
+    try {
+      const results = await this.searchCities(query);
+      this.currentResults = results;
+      this.displayResults(results);
+    } catch (error) {
+      console.error("Error searching cities:", error);
+      this.hideResults();
+    }
   }
 
-  fuzzySearch(query) {
-    const searchTerm = query.toLowerCase();
-    return this.cities
-      .filter((city) => {
-        const cityName = city.name.toLowerCase();
-        const countryName = city.country.toLowerCase();
-        return (
-          cityName.includes(searchTerm) || countryName.includes(searchTerm)
-        );
-      })
-      .slice(0, 10);
+  async searchCities(query) {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        query
+      )}&limit=10&type=city`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch cities");
+    }
+
+    const data = await response.json();
+    return data.map((item) => ({
+      name: item.display_name.split(",")[0],
+      country: item.display_name.split(",").pop().trim(),
+      state:
+        item.display_name.split(",").length > 2
+          ? item.display_name.split(",")[1].trim()
+          : "",
+      lat: parseFloat(item.lat),
+      lng: parseFloat(item.lon),
+    }));
   }
 
   displayResults(results) {
@@ -134,11 +128,7 @@ class CitySearch {
   selectCurrentResult() {
     const items = this.resultsContainer.querySelectorAll(".autocomplete-item");
     if (this.selectedIndex >= 0 && this.selectedIndex < items.length) {
-      const city = this.cities.find(
-        (c) =>
-          `${c.name}, ${c.state ? c.state + ", " : ""}${c.country}` ===
-          items[this.selectedIndex].textContent
-      );
+      const city = this.currentResults[this.selectedIndex];
       if (city) {
         this.selectCity(city);
       }
