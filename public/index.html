@@ -209,6 +209,20 @@
           margin-left: 16px;
         }
       }
+      @media (max-width: 480px) {
+        .search-container {
+          top: 24px;
+          max-width: 350px;
+          width: calc(100% - 16px);
+          margin-bottom: 12px;
+        }
+        .search-input {
+          padding: 12px 14px;
+        }
+        .autocomplete-item {
+          padding: 12px 14px;
+        }
+      }
       .version {
         color: #666;
         font-size: 12px;
@@ -284,19 +298,6 @@
         left: auto;
         right: 50%;
         transform: translateX(50%);
-      }
-      @media (max-width: 768px) {
-        .search-container {
-          top: 10px;
-          width: calc(100% - 20px);
-          margin-bottom: 8px;
-        }
-        .search-input {
-          padding: 16px 20px;
-        }
-        .autocomplete-item {
-          padding: 16px 20px;
-        }
       }
       input,
       select,
