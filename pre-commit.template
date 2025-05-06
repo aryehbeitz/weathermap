@@ -18,3 +18,6 @@ node -p "
 
 # Add version.json to the commit
 git add public/version.json
+
+# Create a tag for the new version
+git tag -a "v${NEW_VERSION}" -m "Release version ${NEW_VERSION}"
