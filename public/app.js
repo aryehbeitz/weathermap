@@ -33,6 +33,22 @@ async function checkVersion() {
 
     // Check if version has changed
     if (currentVersion && currentVersion !== data.version) {
+      // Clear service worker cache and unregister
+      if ("serviceWorker" in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.getRegistration();
+          if (registration) {
+            await registration.unregister();
+            // Clear all caches
+            const cacheNames = await caches.keys();
+            await Promise.all(
+              cacheNames.map((cacheName) => caches.delete(cacheName))
+            );
+          }
+        } catch (error) {
+          console.error("Error clearing cache:", error);
+        }
+      }
       window.location.reload(true); // Hard refresh
     }
 
@@ -236,11 +252,19 @@ async function fetchWeather(lat, lng) {
 async function getLocationByIP() {
   try {
     const response = await fetch("/api/ip-location");
+    if (!response.ok) {
+      throw new Error("Failed to fetch IP location");
+    }
     const data = await response.json();
     if (data.error) {
       throw new Error(data.error);
     }
-    return data;
+    return {
+      lat: data.lat,
+      lng: data.lng,
+      city: data.city,
+      country: data.country,
+    };
   } catch (error) {
     console.error("Error getting IP location:", error);
     throw error;
@@ -302,6 +326,10 @@ document.addEventListener("DOMContentLoaded", () => {
                   try {
                     // Try IP-based location as fallback
                     const ipLocation = await getLocationByIP();
+                    if (!ipLocation || !ipLocation.lat || !ipLocation.lng) {
+                      throw new Error("Invalid IP location data");
+                    }
+
                     map.setView([ipLocation.lat, ipLocation.lng], 12);
                     if (marker) {
                       map.removeLayer(marker);
@@ -315,6 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     showNotification(translations[currentLang].usingIPLocation);
                     return;
                   } catch (ipError) {
+                    console.error("IP location fallback failed:", ipError);
                     errorMessage = translations[currentLang].locationUnknown;
                   }
                 } else {
