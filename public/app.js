@@ -226,7 +226,7 @@ async function fetchWeather(lat, lng) {
       })
       .join("");
 
-    weatherInfo.style.display = "block";
+    weatherInfo.style.display = window.weatherInfoHidden ? "none" : "block";
     weatherInfo.innerHTML = `
       <div class="content">
         <div class="current-weather">
@@ -428,4 +428,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // Listen for weatherInfoToggled event
+  document.addEventListener("weatherInfoToggled", (e) => {
+    const infoBox = document.getElementById("weather-info");
+    if (e.detail.hidden) {
+      infoBox.style.display = "none";
+    } else {
+      infoBox.style.display = "block";
+    }
+  });
 });

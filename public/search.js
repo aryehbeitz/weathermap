@@ -7,6 +7,7 @@ class CitySearch {
     this.debounceTimeout = null;
     this.currentResults = [];
     this.citySelected = false;
+    window.weatherInfoHidden = false;
 
     this.setupEventListeners();
     this.updateToggleVisibility();
@@ -66,12 +67,17 @@ class CitySearch {
     if (this.infoToggle) {
       this.infoToggle.addEventListener("click", () => {
         const infoBox = document.getElementById("weather-info");
-        if (infoBox.style.display === "none" || infoBox.style.display === "") {
+        if (window.weatherInfoHidden) {
           this.showDataBox();
         } else {
           this.hideDataBox();
         }
         this.updateToggleVisibility();
+        document.dispatchEvent(
+          new CustomEvent("weatherInfoToggled", {
+            detail: { hidden: window.weatherInfoHidden },
+          })
+        );
       });
     }
   }
@@ -79,11 +85,13 @@ class CitySearch {
   showDataBox() {
     const infoBox = document.getElementById("weather-info");
     if (infoBox) infoBox.style.display = "block";
+    window.weatherInfoHidden = false;
   }
 
   hideDataBox() {
     const infoBox = document.getElementById("weather-info");
     if (infoBox) infoBox.style.display = "none";
+    window.weatherInfoHidden = true;
   }
 
   updateToggleVisibility() {
