@@ -276,6 +276,12 @@ async function getLocationByIP() {
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
 
+  // Set search bar placeholder based on language
+  const searchInput = document.querySelector(".search-input");
+  if (searchInput) {
+    searchInput.placeholder = translations[currentLang].searchPlaceholder;
+  }
+
   // Listen for city selection from search
   document.addEventListener("citySelected", (event) => {
     const { lat, lng, displayName } = event.detail;
@@ -410,6 +416,10 @@ document.addEventListener("DOMContentLoaded", () => {
       originalToggle && originalToggle();
       if (findLocationBtn) {
         findLocationBtn.textContent = translations[currentLang].findLocation;
+      }
+      // Update search bar placeholder on language toggle
+      if (searchInput) {
+        searchInput.placeholder = translations[currentLang].searchPlaceholder;
       }
     };
   }

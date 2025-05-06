@@ -25,6 +25,7 @@ const translations = {
     geolocationNotSupported: "Geolocation is not supported by your browser.",
     usingIPLocation:
       "Using approximate location based on your IP address. For more accurate results, please enable location services.",
+    searchPlaceholder: "Search for a city...",
   },
   he: {
     temperature: "טמפרטורה",
@@ -49,5 +50,6 @@ const translations = {
     geolocationNotSupported: "הדפדפן שלך אינו תומך במיקום גיאוגרפי.",
     usingIPLocation:
       "משתמש במיקום משוער בהתבסס על כתובת ה-IP שלך. לתוצאות מדויקות יותר, אנא הפעל את שירותי המיקום.",
+    searchPlaceholder: "חפש עיר...",
   },
 };
