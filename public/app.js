@@ -205,7 +205,8 @@ async function fetchWeather(lat, lng) {
     const windDirection = getWindDirection(currentData.wind.deg);
 
     // Process forecast data
-    const forecastItems = forecastData.list
+    const forecastList = forecastData.list;
+    const forecastItems = forecastList
       .slice(0, 5)
       .map((item) => {
         const date = new Date(item.dt * 1000);
@@ -232,6 +233,53 @@ async function fetchWeather(lat, lng) {
       })
       .join("");
 
+    // --- Daily forecast section ---
+    // Group by day
+    const dailyMap = {};
+    forecastList.forEach((item) => {
+      const date = new Date(item.dt * 1000);
+      const dayKey = date.toISOString().slice(0, 10); // YYYY-MM-DD
+      if (!dailyMap[dayKey]) {
+        dailyMap[dayKey] = [];
+      }
+      dailyMap[dayKey].push(item);
+    });
+    const dailyKeys = Object.keys(dailyMap);
+    const dailyItems = dailyKeys
+      .map((dayKey) => {
+        const items = dailyMap[dayKey];
+        const temps = items
+          .map((i) => [i.main.temp_min, i.main.temp_max])
+          .flat();
+        const min = Math.min(...temps);
+        const max = Math.max(...temps);
+        // Most common weather description
+        const descCounts = {};
+        items.forEach((i) => {
+          const desc = i.weather[0].description;
+          descCounts[desc] = (descCounts[desc] || 0) + 1;
+        });
+        const summary = Object.entries(descCounts).sort(
+          (a, b) => b[1] - a[1]
+        )[0][0];
+        // Day name
+        const dayName = new Date(dayKey).toLocaleDateString(currentLang, {
+          weekday: "short",
+        });
+        return `
+        <div class="forecast-item">
+          <div class="forecast-time">${dayName}</div>
+          <div class="forecast-temp">${min}${translations[currentLang].celsius} – ${max}${translations[currentLang].celsius}</div>
+          <div class="forecast-wind">${summary}</div>
+        </div>
+      `;
+      })
+      .join("");
+    const dailySectionTitle = translations[currentLang].dailyForecast.replace(
+      "{days}",
+      dailyKeys.length
+    );
+
     weatherInfo.style.display = window.weatherInfoHidden ? "none" : "block";
     weatherInfo.innerHTML = `
       <div class="content">
@@ -251,6 +299,17 @@ async function fetchWeather(lat, lng) {
               <div class="forecast-wind">${translations[currentLang].wind}</div>
             </div>
             ${forecastItems}
+          </div>
+        </div>
+        <div class="forecast-container">
+          <h4>${dailySectionTitle}</h4>
+          <div class="forecast-items">
+            <div class="forecast-item" style="font-weight:bold;">
+              <div class="forecast-time">${translations[currentLang].day}</div>
+              <div class="forecast-temp">${translations[currentLang].min} – ${translations[currentLang].max}</div>
+              <div class="forecast-wind">${translations[currentLang].summary}</div>
+            </div>
+            ${dailyItems}
           </div>
         </div>
       </div>
