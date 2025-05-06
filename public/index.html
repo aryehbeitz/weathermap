@@ -374,8 +374,22 @@
         color: #666;
         transition: color 0.2s;
       }
+      [dir="rtl"] .info-toggle {
+        left: 12px;
+        right: auto;
+      }
       .info-toggle:hover {
         color: #222;
+      }
+      @media (max-width: 480px) {
+        .info-toggle {
+          font-size: 26px;
+          right: 10px;
+        }
+        [dir="rtl"] .info-toggle {
+          left: 10px;
+          right: auto;
+        }
       }
     </style>
   </head>

@@ -6,7 +6,6 @@ class CitySearch {
     this.selectedIndex = -1;
     this.debounceTimeout = null;
     this.currentResults = [];
-    this.dataBoxVisible = true;
     this.citySelected = false;
 
     this.setupEventListeners();
@@ -15,13 +14,13 @@ class CitySearch {
     // Listen for citySelected event (e.g., from Find My Location)
     document.addEventListener("citySelected", () => {
       this.citySelected = true;
-      this.dataBoxVisible = true;
+      this.showDataBox();
       this.updateToggleVisibility();
     });
     // Listen for locationSelected event (map click or location)
     document.addEventListener("locationSelected", () => {
       this.citySelected = true;
-      this.dataBoxVisible = true;
+      this.showDataBox();
       this.updateToggleVisibility();
     });
   }
@@ -31,7 +30,7 @@ class CitySearch {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => this.handleSearch(), 300);
       this.citySelected = false;
-      this.dataBoxVisible = true;
+      this.showDataBox();
       this.updateToggleVisibility();
     });
 
@@ -66,28 +65,40 @@ class CitySearch {
 
     if (this.infoToggle) {
       this.infoToggle.addEventListener("click", () => {
-        this.dataBoxVisible = !this.dataBoxVisible;
         const infoBox = document.getElementById("weather-info");
-        if (this.dataBoxVisible) {
-          infoBox.style.display = "block";
-          this.infoToggle.textContent = "👁️";
+        if (infoBox.style.display === "none" || infoBox.style.display === "") {
+          this.showDataBox();
         } else {
-          infoBox.style.display = "none";
-          this.infoToggle.textContent = "🙈";
+          this.hideDataBox();
         }
+        this.updateToggleVisibility();
       });
     }
   }
 
+  showDataBox() {
+    const infoBox = document.getElementById("weather-info");
+    if (infoBox) infoBox.style.display = "block";
+  }
+
+  hideDataBox() {
+    const infoBox = document.getElementById("weather-info");
+    if (infoBox) infoBox.style.display = "none";
+  }
+
   updateToggleVisibility() {
     if (!this.infoToggle) return;
-    // Show the toggle if a city is selected or there are results
+    const infoBox = document.getElementById("weather-info");
+    const isVisible =
+      infoBox &&
+      infoBox.style.display !== "none" &&
+      infoBox.style.display !== "";
     if (
       this.citySelected ||
       (this.currentResults && this.currentResults.length > 0)
     ) {
       this.infoToggle.style.display = "inline-block";
-      this.infoToggle.textContent = this.dataBoxVisible ? "👁️" : "🙈";
+      this.infoToggle.textContent = isVisible ? "👁️" : "🙈";
     } else {
       this.infoToggle.style.display = "none";
     }
@@ -98,7 +109,7 @@ class CitySearch {
     if (query.length < 2) {
       this.hideResults();
       this.citySelected = false;
-      this.dataBoxVisible = true;
+      this.showDataBox();
       this.updateToggleVisibility();
       return;
     }
@@ -108,13 +119,13 @@ class CitySearch {
       this.currentResults = results;
       this.displayResults(results);
       this.citySelected = false;
-      this.dataBoxVisible = true;
+      this.showDataBox();
       this.updateToggleVisibility();
     } catch (error) {
       console.error("Error searching cities:", error);
       this.hideResults();
       this.citySelected = false;
-      this.dataBoxVisible = true;
+      this.showDataBox();
       this.updateToggleVisibility();
     }
   }
@@ -200,7 +211,7 @@ class CitySearch {
     }${city.country}`;
     this.hideResults();
     this.citySelected = true;
-    this.dataBoxVisible = true;
+    this.showDataBox();
     this.updateToggleVisibility();
 
     // Dispatch a custom event that the main app can listen for
