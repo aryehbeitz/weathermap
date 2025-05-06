@@ -143,7 +143,13 @@ class CitySearch {
 
     // Dispatch a custom event that the main app can listen for
     const event = new CustomEvent("citySelected", {
-      detail: { lat: city.lat, lng: city.lng },
+      detail: {
+        lat: city.lat,
+        lng: city.lng,
+        displayName: `${city.name}${city.state ? ", " + city.state : ""}, ${
+          city.country
+        }`,
+      },
     });
     document.dispatchEvent(event);
   }

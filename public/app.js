@@ -18,6 +18,7 @@ const weatherInfo = document.getElementById("weather-info");
 let currentLang =
   new URLSearchParams(window.location.search).get("lang") || "en";
 let currentVersion = null;
+let selectedCityDisplayName = null;
 
 // Version checking function
 async function checkVersion() {
@@ -175,6 +176,7 @@ async function fetchWeather(lat, lng) {
 
     // Get localized city name
     const cityName =
+      selectedCityDisplayName ||
       cityData.address?.city ||
       cityData.address?.town ||
       cityData.address?.village ||
@@ -277,7 +279,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Listen for city selection from search
   document.addEventListener("citySelected", (event) => {
-    const { lat, lng } = event.detail;
+    const { lat, lng, displayName } = event.detail;
+    selectedCityDisplayName = displayName || null;
     map.setView([lat, lng], 12);
     if (marker) {
       map.removeLayer(marker);
