@@ -18,6 +18,12 @@ class CitySearch {
       this.dataBoxVisible = true;
       this.updateToggleVisibility();
     });
+    // Listen for locationSelected event (map click or location)
+    document.addEventListener("locationSelected", () => {
+      this.citySelected = true;
+      this.dataBoxVisible = true;
+      this.updateToggleVisibility();
+    });
   }
 
   setupEventListeners() {

@@ -163,6 +163,8 @@ function initMap() {
 
     marker = L.marker([lat, lng]).addTo(map);
     fetchWeather(lat, lng);
+    // Notify search bar to show toggle
+    document.dispatchEvent(new CustomEvent("locationSelected"));
   });
 }
 
@@ -317,6 +319,8 @@ document.addEventListener("DOMContentLoaded", () => {
             findLocationBtn.disabled = false;
             findLocationBtn.textContent =
               translations[currentLang].findLocation;
+            // Notify search bar to show toggle
+            document.dispatchEvent(new CustomEvent("locationSelected"));
           },
           async (error) => {
             clearTimeout(timeoutId);
@@ -353,6 +357,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // Show notification about using IP location
                     showNotification(translations[currentLang].usingIPLocation);
+                    // Notify search bar to show toggle
+                    document.dispatchEvent(new CustomEvent("locationSelected"));
                     return;
                   } catch (ipError) {
                     console.error("IP location fallback failed:", ipError);
