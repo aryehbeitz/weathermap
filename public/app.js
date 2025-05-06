@@ -214,12 +214,18 @@ async function fetchWeather(lat, lng) {
           minute: "2-digit",
           hour12: false,
         });
+        const tempMin = item.main.temp_min;
+        const tempMax = item.main.temp_max;
+        let tempDisplay =
+          tempMin === tempMax
+            ? `${tempMin}${translations[currentLang].celsius}`
+            : `${tempMin}${translations[currentLang].celsius} – ${tempMax}${translations[currentLang].celsius}`;
         const windSpeed = (item.wind.speed * 3.6).toFixed(1);
         const windDir = getWindDirection(item.wind.deg);
         return `
         <div class="forecast-item">
           <div class="forecast-time">${time}</div>
-          <div class="forecast-temp">${item.main.temp}${translations[currentLang].celsius}</div>
+          <div class="forecast-temp">${tempDisplay}</div>
           <div class="forecast-wind">${windSpeed} ${translations[currentLang].kmh} ${windDir}</div>
         </div>
       `;
@@ -239,6 +245,11 @@ async function fetchWeather(lat, lng) {
         <div class="forecast-container">
           <h4>${translations[currentLang].forecast}</h4>
           <div class="forecast-items">
+            <div class="forecast-item" style="font-weight:bold;">
+              <div class="forecast-time">Time</div>
+              <div class="forecast-temp">${translations[currentLang].tempRange}</div>
+              <div class="forecast-wind">${translations[currentLang].wind}</div>
+            </div>
             ${forecastItems}
           </div>
         </div>

@@ -26,6 +26,7 @@ const translations = {
     usingIPLocation:
       "Using approximate location based on your IP address. For more accurate results, please enable location services.",
     searchPlaceholder: "Search for a city...",
+    tempRange: "Temperature",
   },
   he: {
     temperature: "טמפרטורה",
@@ -51,5 +52,6 @@ const translations = {
     usingIPLocation:
       "משתמש במיקום משוער בהתבסס על כתובת ה-IP שלך. לתוצאות מדויקות יותר, אנא הפעל את שירותי המיקום.",
     searchPlaceholder: "חפש עיר...",
+    tempRange: "טווח טמפרטורה",
   },
 };
