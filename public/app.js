@@ -50,12 +50,23 @@ async function checkVersion() {
           console.error("Error clearing cache:", error);
         }
       }
-      window.location.reload(true); // Hard refresh
+      // Try to reload, but if it fails, show a message and retry after delay
+      try {
+        window.location.reload(true); // Hard refresh
+      } catch (e) {
+        showNotification(
+          "Update available soon, please try again in a moment."
+        );
+        setTimeout(() => checkVersion(), 10000);
+      }
+      return;
     }
 
     currentVersion = data.version;
   } catch (error) {
     console.error("Error checking version:", error);
+    showNotification("Update check failed, retrying soon...");
+    setTimeout(() => checkVersion(), 10000);
   }
 }
 

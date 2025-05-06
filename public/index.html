@@ -28,6 +28,14 @@
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
     <style>
+      html {
+        box-sizing: border-box;
+      }
+      *,
+      *:before,
+      *:after {
+        box-sizing: inherit;
+      }
       body {
         margin: 0;
         padding: 0;
@@ -199,6 +207,8 @@
           padding: 10px 0;
           border-radius: 0;
           box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
+          background: white;
+          z-index: 1001;
         }
         #language-toggle button {
           font-size: 18px;
@@ -211,9 +221,11 @@
       }
       @media (max-width: 480px) {
         .search-container {
+          position: absolute;
           top: 24px;
+          left: 2vw;
+          width: 96vw;
           max-width: 350px;
-          width: calc(100% - 16px);
           margin-bottom: 12px;
         }
         .search-input {
@@ -221,6 +233,22 @@
         }
         .autocomplete-item {
           padding: 12px 14px;
+        }
+        #language-toggle {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100vw;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 0;
+          border-radius: 0;
+          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
+          background: white;
+          z-index: 1001;
         }
       }
       .version {
