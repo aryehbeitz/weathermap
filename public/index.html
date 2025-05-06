@@ -192,6 +192,22 @@
         margin-left: 0;
         margin-right: 10px;
       }
+      .notification {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 4px;
+        z-index: 1000;
+        font-size: 14px;
+        transition: opacity 0.5s ease-in-out;
+      }
+      .notification.fade-out {
+        opacity: 0;
+      }
     </style>
   </head>
   <body>

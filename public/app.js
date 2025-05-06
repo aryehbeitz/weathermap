@@ -316,11 +316,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
                     fetchWeather(ipLocation.lat, ipLocation.lng);
 
-                    // Show message about using IP location
-                    alert(
-                      translations[currentLang].usingIPLocation ||
-                        `Using approximate location based on your IP address (${ipLocation.city}, ${ipLocation.country}). For more accurate results, please enable location services.`
-                    );
+                    // Show notification about using IP location
+                    const notification = document.createElement("div");
+                    notification.className = "notification";
+                    notification.textContent =
+                      translations[currentLang].usingIPLocation;
+                    document.body.appendChild(notification);
+
+                    // Remove notification after 5 seconds
+                    setTimeout(() => {
+                      notification.classList.add("fade-out");
+                      setTimeout(() => notification.remove(), 500);
+                    }, 5000);
                     return;
                   } catch (ipError) {
                     errorMessage =
