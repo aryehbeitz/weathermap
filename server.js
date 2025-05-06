@@ -23,6 +23,22 @@ app.get("/version.json", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "version.json"));
 });
 
+// IP-based geolocation endpoint
+app.get("/api/ip-location", async (req, res) => {
+  try {
+    const response = await axios.get("https://ipapi.co/json/");
+    res.json({
+      lat: response.data.latitude,
+      lng: response.data.longitude,
+      city: response.data.city,
+      country: response.data.country_name,
+      source: "ip",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.get("/api/weather", async (req, res) => {
   const { lat, lon, lang } = req.query;
   try {

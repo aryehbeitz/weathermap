@@ -232,13 +232,28 @@ async function fetchWeather(lat, lng) {
   }
 }
 
+// Function to get location by IP
+async function getLocationByIP() {
+  try {
+    const response = await fetch("/api/ip-location");
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error getting IP location:", error);
+    throw error;
+  }
+}
+
 // Initialize the map when the page loads
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
   const findLocationBtn = document.getElementById("find-location");
   if (findLocationBtn) {
     findLocationBtn.textContent = translations[currentLang].findLocation;
-    findLocationBtn.onclick = () => {
+    findLocationBtn.onclick = async () => {
       if (navigator.geolocation) {
         findLocationBtn.disabled = true;
         findLocationBtn.textContent =
@@ -254,6 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         }, 10000); // 10 second timeout
 
+        // Try to get location with high accuracy first
         navigator.geolocation.getCurrentPosition(
           (position) => {
             clearTimeout(timeoutId);
@@ -269,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
             findLocationBtn.textContent =
               translations[currentLang].findLocation;
           },
-          (error) => {
+          async (error) => {
             clearTimeout(timeoutId);
             findLocationBtn.disabled = false;
             findLocationBtn.textContent =
@@ -283,9 +299,39 @@ document.addEventListener("DOMContentLoaded", () => {
                   "Location access was denied. Please enable location services and try again.";
                 break;
               case error.POSITION_UNAVAILABLE:
-                errorMessage =
-                  translations[currentLang].locationUnavailable ||
-                  "Location information is unavailable. Please try again.";
+                // Check if it's a kCLErrorLocationUnknown error
+                if (
+                  error.message &&
+                  error.message.includes("kCLErrorLocationUnknown")
+                ) {
+                  try {
+                    // Try IP-based location as fallback
+                    const ipLocation = await getLocationByIP();
+                    map.setView([ipLocation.lat, ipLocation.lng], 12);
+                    if (marker) {
+                      map.removeLayer(marker);
+                    }
+                    marker = L.marker([ipLocation.lat, ipLocation.lng]).addTo(
+                      map
+                    );
+                    fetchWeather(ipLocation.lat, ipLocation.lng);
+
+                    // Show message about using IP location
+                    alert(
+                      translations[currentLang].usingIPLocation ||
+                        `Using approximate location based on your IP address (${ipLocation.city}, ${ipLocation.country}). For more accurate results, please enable location services.`
+                    );
+                    return;
+                  } catch (ipError) {
+                    errorMessage =
+                      translations[currentLang].locationUnknown ||
+                      "Unable to determine your location. Please try again in a few moments or move to an area with better GPS signal.";
+                  }
+                } else {
+                  errorMessage =
+                    translations[currentLang].locationUnavailable ||
+                    "Location information is unavailable. Please try again.";
+                }
                 break;
               case error.TIMEOUT:
                 errorMessage =
