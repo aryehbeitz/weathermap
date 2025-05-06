@@ -274,6 +274,18 @@ async function getLocationByIP() {
 // Initialize the map when the page loads
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
+
+  // Listen for city selection from search
+  document.addEventListener("citySelected", (event) => {
+    const { lat, lng } = event.detail;
+    map.setView([lat, lng], 12);
+    if (marker) {
+      map.removeLayer(marker);
+    }
+    marker = L.marker([lat, lng]).addTo(map);
+    fetchWeather(lat, lng);
+  });
+
   const findLocationBtn = document.getElementById("find-location");
   if (findLocationBtn) {
     findLocationBtn.textContent = translations[currentLang].findLocation;
