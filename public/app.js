@@ -266,11 +266,16 @@ async function fetchWeather(lat, lng) {
         const dayName = new Date(dayKey).toLocaleDateString(currentLang, {
           weekday: "short",
         });
+        // Average wind speed (km/h)
+        const avgWind = (
+          items.reduce((sum, i) => sum + i.wind.speed * 3.6, 0) / items.length
+        ).toFixed(1);
         return `
-        <div class="forecast-item">
+        <div class="forecast-item daily-item">
           <div class="forecast-time">${dayName}</div>
           <div class="forecast-temp">${min}${translations[currentLang].celsius} – ${max}${translations[currentLang].celsius}</div>
           <div class="forecast-wind">${summary}</div>
+          <div class="forecast-wind-speed">${avgWind} ${translations[currentLang].kmh}</div>
         </div>
       `;
       })
@@ -303,11 +308,12 @@ async function fetchWeather(lat, lng) {
         </div>
         <div class="forecast-container">
           <h4>${dailySectionTitle}</h4>
-          <div class="forecast-items">
-            <div class="forecast-item" style="font-weight:bold;">
+          <div class="forecast-items daily-forecast-items">
+            <div class="forecast-item daily-item" style="font-weight:bold;">
               <div class="forecast-time">${translations[currentLang].day}</div>
               <div class="forecast-temp">${translations[currentLang].min} – ${translations[currentLang].max}</div>
               <div class="forecast-wind">${translations[currentLang].summary}</div>
+              <div class="forecast-wind-speed">${translations[currentLang].windSpeed}</div>
             </div>
             ${dailyItems}
           </div>
@@ -518,4 +524,9 @@ document.addEventListener("DOMContentLoaded", () => {
       infoBox.style.display = "block";
     }
   });
+
+  // Add CSS for smaller font in daily forecast
+  const style = document.createElement("style");
+  style.textContent = `.daily-forecast-items .daily-item { font-size: 13px; }`;
+  document.head.appendChild(style);
 });

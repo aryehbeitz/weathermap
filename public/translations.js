@@ -32,6 +32,8 @@ const translations = {
     min: "Min",
     max: "Max",
     summary: "Summary",
+    time: "Time",
+    windSpeed: "Wind speed",
   },
   he: {
     temperature: "טמפרטורה",
@@ -63,5 +65,7 @@ const translations = {
     min: "מינימום",
     max: "מקסימום",
     summary: "סיכום",
+    time: "שעה",
+    windSpeed: "מהירות רוח",
   },
 };
