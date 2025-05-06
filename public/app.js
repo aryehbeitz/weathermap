@@ -243,8 +243,20 @@ document.addEventListener("DOMContentLoaded", () => {
         findLocationBtn.disabled = true;
         findLocationBtn.textContent =
           translations[currentLang].findLocation + "...";
+
+        // Set a timeout for geolocation
+        const timeoutId = setTimeout(() => {
+          findLocationBtn.disabled = false;
+          findLocationBtn.textContent = translations[currentLang].findLocation;
+          alert(
+            translations[currentLang].locationTimeout ||
+              "Location request timed out. Please try again."
+          );
+        }, 10000); // 10 second timeout
+
         navigator.geolocation.getCurrentPosition(
           (position) => {
+            clearTimeout(timeoutId);
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
             map.setView([lat, lng], 12);
@@ -258,14 +270,46 @@ document.addEventListener("DOMContentLoaded", () => {
               translations[currentLang].findLocation;
           },
           (error) => {
-            alert("Unable to retrieve your location.");
+            clearTimeout(timeoutId);
             findLocationBtn.disabled = false;
             findLocationBtn.textContent =
               translations[currentLang].findLocation;
+
+            let errorMessage;
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                errorMessage =
+                  translations[currentLang].locationDenied ||
+                  "Location access was denied. Please enable location services and try again.";
+                break;
+              case error.POSITION_UNAVAILABLE:
+                errorMessage =
+                  translations[currentLang].locationUnavailable ||
+                  "Location information is unavailable. Please try again.";
+                break;
+              case error.TIMEOUT:
+                errorMessage =
+                  translations[currentLang].locationTimeout ||
+                  "Location request timed out. Please try again.";
+                break;
+              default:
+                errorMessage =
+                  translations[currentLang].locationError ||
+                  "An unknown error occurred while getting your location. Please try again.";
+            }
+            alert(errorMessage);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
           }
         );
       } else {
-        alert("Geolocation is not supported by your browser.");
+        alert(
+          translations[currentLang].geolocationNotSupported ||
+            "Geolocation is not supported by your browser."
+        );
       }
     };
   }
