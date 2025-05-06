@@ -6,6 +6,8 @@ class CitySearch {
     this.selectedIndex = -1;
     this.debounceTimeout = null;
     this.currentResults = [];
+    this.dataBoxVisible = true;
+    this.citySelected = false;
 
     this.setupEventListeners();
     this.updateToggleVisibility();
@@ -15,6 +17,8 @@ class CitySearch {
     this.searchInput.addEventListener("input", () => {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => this.handleSearch(), 300);
+      this.citySelected = false;
+      this.dataBoxVisible = true;
       this.updateToggleVisibility();
     });
 
@@ -46,14 +50,31 @@ class CitySearch {
         this.hideResults();
       }
     });
+
+    if (this.infoToggle) {
+      this.infoToggle.addEventListener("click", () => {
+        this.dataBoxVisible = !this.dataBoxVisible;
+        const infoBox = document.getElementById("weather-info");
+        if (this.dataBoxVisible) {
+          infoBox.style.display = "block";
+          this.infoToggle.textContent = "👁️";
+        } else {
+          infoBox.style.display = "none";
+          this.infoToggle.textContent = "🙈";
+        }
+      });
+    }
   }
 
   updateToggleVisibility() {
     if (!this.infoToggle) return;
-    const hasValue = this.searchInput.value.trim().length > 0;
-    const hasResults = this.currentResults && this.currentResults.length > 0;
-    if (hasValue && hasResults) {
+    // Show the toggle if a city is selected or there are results
+    if (
+      this.citySelected ||
+      (this.currentResults && this.currentResults.length > 0)
+    ) {
       this.infoToggle.style.display = "inline-block";
+      this.infoToggle.textContent = this.dataBoxVisible ? "👁️" : "🙈";
     } else {
       this.infoToggle.style.display = "none";
     }
@@ -63,6 +84,8 @@ class CitySearch {
     const query = this.searchInput.value.trim();
     if (query.length < 2) {
       this.hideResults();
+      this.citySelected = false;
+      this.dataBoxVisible = true;
       this.updateToggleVisibility();
       return;
     }
@@ -71,10 +94,14 @@ class CitySearch {
       const results = await this.searchCities(query);
       this.currentResults = results;
       this.displayResults(results);
+      this.citySelected = false;
+      this.dataBoxVisible = true;
       this.updateToggleVisibility();
     } catch (error) {
       console.error("Error searching cities:", error);
       this.hideResults();
+      this.citySelected = false;
+      this.dataBoxVisible = true;
       this.updateToggleVisibility();
     }
   }
@@ -159,6 +186,8 @@ class CitySearch {
       city.state ? city.state + ", " : ""
     }${city.country}`;
     this.hideResults();
+    this.citySelected = true;
+    this.dataBoxVisible = true;
     this.updateToggleVisibility();
 
     // Dispatch a custom event that the main app can listen for
