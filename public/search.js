@@ -90,9 +90,7 @@ class CitySearch {
     if (!this.infoToggle) return;
     const infoBox = document.getElementById("weather-info");
     const isVisible =
-      infoBox &&
-      infoBox.style.display !== "none" &&
-      infoBox.style.display !== "";
+      infoBox && window.getComputedStyle(infoBox).display !== "none";
     if (
       this.citySelected ||
       (this.currentResults && this.currentResults.length > 0)
