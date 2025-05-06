@@ -16,9 +16,11 @@ app.use(express.static("public"));
 // Serve version.json with no caching
 app.get("/version.json", (req, res) => {
   res.set({
-    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "Cache-Control":
+      "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
     Pragma: "no-cache",
     Expires: "0",
+    "Surrogate-Control": "no-store",
   });
   res.sendFile(path.join(__dirname, "public", "version.json"));
 });
