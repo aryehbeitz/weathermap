@@ -263,10 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const timeoutId = setTimeout(() => {
           findLocationBtn.disabled = false;
           findLocationBtn.textContent = translations[currentLang].findLocation;
-          alert(
-            translations[currentLang].locationTimeout ||
-              "Location request timed out. Please try again."
-          );
+          showNotification(translations[currentLang].locationTimeout);
         }, 10000); // 10 second timeout
 
         // Try to get location with high accuracy first
@@ -294,9 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let errorMessage;
             switch (error.code) {
               case error.PERMISSION_DENIED:
-                errorMessage =
-                  translations[currentLang].locationDenied ||
-                  "Location access was denied. Please enable location services and try again.";
+                errorMessage = translations[currentLang].locationDenied;
                 break;
               case error.POSITION_UNAVAILABLE:
                 // Check if it's a kCLErrorLocationUnknown error
@@ -317,40 +312,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     fetchWeather(ipLocation.lat, ipLocation.lng);
 
                     // Show notification about using IP location
-                    const notification = document.createElement("div");
-                    notification.className = "notification";
-                    notification.textContent =
-                      translations[currentLang].usingIPLocation;
-                    document.body.appendChild(notification);
-
-                    // Remove notification after 5 seconds
-                    setTimeout(() => {
-                      notification.classList.add("fade-out");
-                      setTimeout(() => notification.remove(), 500);
-                    }, 5000);
+                    showNotification(translations[currentLang].usingIPLocation);
                     return;
                   } catch (ipError) {
-                    errorMessage =
-                      translations[currentLang].locationUnknown ||
-                      "Unable to determine your location. Please try again in a few moments or move to an area with better GPS signal.";
+                    errorMessage = translations[currentLang].locationUnknown;
                   }
                 } else {
-                  errorMessage =
-                    translations[currentLang].locationUnavailable ||
-                    "Location information is unavailable. Please try again.";
+                  errorMessage = translations[currentLang].locationUnavailable;
                 }
                 break;
               case error.TIMEOUT:
-                errorMessage =
-                  translations[currentLang].locationTimeout ||
-                  "Location request timed out. Please try again.";
+                errorMessage = translations[currentLang].locationTimeout;
                 break;
               default:
-                errorMessage =
-                  translations[currentLang].locationError ||
-                  "An unknown error occurred while getting your location. Please try again.";
+                errorMessage = translations[currentLang].locationError;
             }
-            alert(errorMessage);
+            showNotification(errorMessage);
           },
           {
             enableHighAccuracy: true,
@@ -359,12 +336,23 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         );
       } else {
-        alert(
-          translations[currentLang].geolocationNotSupported ||
-            "Geolocation is not supported by your browser."
-        );
+        showNotification(translations[currentLang].geolocationNotSupported);
       }
     };
+  }
+
+  // Helper function to show notifications
+  function showNotification(message) {
+    const notification = document.createElement("div");
+    notification.className = "notification";
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // Remove notification after 5 seconds
+    setTimeout(() => {
+      notification.classList.add("fade-out");
+      setTimeout(() => notification.remove(), 500);
+    }, 5000);
   }
 
   // Update Find Location button text on language toggle
