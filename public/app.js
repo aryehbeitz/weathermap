@@ -146,7 +146,7 @@ function initMap() {
       ? [initialLat, initialLng]
       : [0, 0];
 
-  map = L.map("map").setView(initialView, initialZoom);
+  map = L.map("map", { worldCopyJump: true }).setView(initialView, initialZoom);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
@@ -164,8 +164,12 @@ function initMap() {
   });
 
   map.on("click", (e) => {
-    const lat = e.latlng.lat;
-    const lng = e.latlng.lng;
+    let lat = e.latlng.lat;
+    let lng = e.latlng.lng;
+
+    // Clamp latitude and longitude to valid ranges
+    lat = Math.max(-90, Math.min(90, lat));
+    lng = Math.max(-180, Math.min(180, lng));
 
     if (marker) {
       map.removeLayer(marker);
@@ -214,11 +218,11 @@ async function fetchWeather(lat, lng) {
       currentData.name;
 
     // Convert m/s to km/h (1 m/s = 3.6 km/h)
-    const windSpeedKmh = (currentData.wind.speed * 3.6).toFixed(1);
+    const windSpeedKmh = Math.round(currentData.wind.speed * 3.6);
     const windGustsKmh = currentData.wind.gust
-      ? `, ${translations[currentLang].gustsUpTo} ${(
+      ? `, ${translations[currentLang].gustsUpTo} ${Math.round(
           currentData.wind.gust * 3.6
-        ).toFixed(1)} ${translations[currentLang].kmh}`
+        )} ${translations[currentLang].kmh}`
       : "";
     const windDirection = getWindDirection(currentData.wind.deg);
 
@@ -233,13 +237,14 @@ async function fetchWeather(lat, lng) {
           minute: "2-digit",
           hour12: false,
         });
-        const tempMin = item.main.temp_min;
-        const tempMax = item.main.temp_max;
+        const tempMin = Math.round(item.main.temp_min);
+        const tempMax = Math.round(item.main.temp_max);
+        const temp = Math.round(item.main.temp);
         let tempDisplay =
           tempMin === tempMax
-            ? `${tempMin}${translations[currentLang].celsius}`
+            ? `${temp}${translations[currentLang].celsius}`
             : `${tempMin}${translations[currentLang].celsius} – ${tempMax}${translations[currentLang].celsius}`;
-        const windSpeed = (item.wind.speed * 3.6).toFixed(1);
+        const windSpeed = Math.round(item.wind.speed * 3.6);
         const windDir = getWindDirection(item.wind.deg);
         return `
         <div class="forecast-item">
@@ -267,7 +272,10 @@ async function fetchWeather(lat, lng) {
       .map((dayKey) => {
         const items = dailyMap[dayKey];
         const temps = items
-          .map((i) => [i.main.temp_min, i.main.temp_max])
+          .map((i) => [
+            Math.round(i.main.temp_min),
+            Math.round(i.main.temp_max),
+          ])
           .flat();
         const min = Math.min(...temps);
         const max = Math.max(...temps);
@@ -285,9 +293,9 @@ async function fetchWeather(lat, lng) {
           weekday: "short",
         });
         // Average wind speed (km/h)
-        const avgWind = (
+        const avgWind = Math.round(
           items.reduce((sum, i) => sum + i.wind.speed * 3.6, 0) / items.length
-        ).toFixed(1);
+        );
         return `
         <div class="forecast-item daily-item">
           <div class="forecast-time">${dayName}</div>
@@ -311,17 +319,29 @@ async function fetchWeather(lat, lng) {
       <div class="content">
         <div class="current-weather">
           <h3>${cityName}</h3>
-          <p>${translations[currentLang].temperature}: ${currentData.main.temp}${translations[currentLang].celsius}</p>
-          <p>${translations[currentLang].weather}: ${currentData.weather[0].description}</p>
-          <p>${translations[currentLang].humidity}: ${currentData.main.humidity}${translations[currentLang].percent}</p>
-          <p>${translations[currentLang].wind}: ${windSpeedKmh} ${translations[currentLang].kmh}, ${translations[currentLang].blowingFrom} ${windDirection}${windGustsKmh}</p>
+          <p>${translations[currentLang].temperature}: ${Math.round(
+      currentData.main.temp
+    )}${translations[currentLang].celsius}</p>
+          <p>${translations[currentLang].weather}: ${
+      currentData.weather[0].description
+    }</p>
+          <p>${translations[currentLang].humidity}: ${
+      currentData.main.humidity
+    }${translations[currentLang].percent}</p>
+          <p>${translations[currentLang].wind}: ${windSpeedKmh} ${
+      translations[currentLang].kmh
+    }, ${
+      translations[currentLang].blowingFrom
+    } ${windDirection}${windGustsKmh}</p>
         </div>
         <div class="forecast-container">
           <h4>${translations[currentLang].forecast}</h4>
           <div class="forecast-items">
             <div class="forecast-item" style="font-weight:bold;">
               <div class="forecast-time">${translations[currentLang].time}</div>
-              <div class="forecast-temp">${translations[currentLang].tempRange}</div>
+              <div class="forecast-temp">${
+                translations[currentLang].tempRange
+              }</div>
               <div class="forecast-wind">${translations[currentLang].wind}</div>
             </div>
             ${forecastItems}
@@ -332,9 +352,15 @@ async function fetchWeather(lat, lng) {
           <div class="forecast-items daily-forecast-items">
             <div class="forecast-item daily-item" style="font-weight:bold;">
               <div class="forecast-time">${translations[currentLang].day}</div>
-              <div class="forecast-temp">${translations[currentLang].min} – ${translations[currentLang].max}</div>
-              <div class="forecast-wind">${translations[currentLang].summary}</div>
-              <div class="forecast-wind-speed">${translations[currentLang].windSpeed}</div>
+              <div class="forecast-temp">${translations[currentLang].min} – ${
+      translations[currentLang].max
+    }</div>
+              <div class="forecast-wind">${
+                translations[currentLang].summary
+              }</div>
+              <div class="forecast-wind-speed">${
+                translations[currentLang].windSpeed
+              }</div>
             </div>
             ${dailyItems}
           </div>
