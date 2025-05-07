@@ -566,40 +566,46 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  // Helper functions to show/hide weather info box and sync icon
+  function showWeatherInfoBox() {
+    const infoBox = document.getElementById("weather-info");
+    const infoToggleBtn = document.querySelector(".info-toggle");
+    if (infoBox) infoBox.style.display = "block";
+    if (infoToggleBtn) infoToggleBtn.textContent = "👁️";
+  }
+  function hideWeatherInfoBox() {
+    const infoBox = document.getElementById("weather-info");
+    const infoToggleBtn = document.querySelector(".info-toggle");
+    if (infoBox) infoBox.style.display = "none";
+    if (infoToggleBtn) infoToggleBtn.textContent = "🙈";
+  }
+
   // Info toggle button logic
   const infoToggleBtn = document.querySelector(".info-toggle");
   if (infoToggleBtn) {
     infoToggleBtn.addEventListener("click", () => {
       const infoBox = document.getElementById("weather-info");
-      // Use getComputedStyle to check actual visibility
       const isVisible = getComputedStyle(infoBox).display !== "none";
       if (isVisible) {
-        infoBox.style.display = "none";
-        infoToggleBtn.textContent = "🙈";
+        hideWeatherInfoBox();
       } else {
-        infoBox.style.display = "block";
-        infoToggleBtn.textContent = "👁️";
+        showWeatherInfoBox();
       }
     });
   }
 
   // Ensure icon is in sync when box is shown programmatically
   document.addEventListener("locationSelected", () => {
-    const infoBox = document.getElementById("weather-info");
-    const infoToggleBtn = document.querySelector(".info-toggle");
-    if (infoBox && infoToggleBtn) {
-      infoBox.style.display = "block";
-      infoToggleBtn.textContent = "👁️";
-    }
+    showWeatherInfoBox();
   });
 
   // Listen for weatherInfoToggled event
   document.addEventListener("weatherInfoToggled", (e) => {
     const infoBox = document.getElementById("weather-info");
     if (e.detail.hidden) {
-      infoBox.style.display = "none";
+      hideWeatherInfoBox();
     } else {
-      infoBox.style.display = "block";
+      showWeatherInfoBox();
     }
   });
 
