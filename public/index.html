@@ -147,10 +147,10 @@
       .forecast-temp,
       .daily-forecast-items .forecast-temp {
         font-size: 12px;
-        flex: 2 1 140px;
-        min-width: 120px;
-        text-align: center;
-        padding: 0 2px;
+        flex: 1 1 100px;
+        min-width: 100px;
+        text-align: left;
+        padding: 0 0 0 2px;
         white-space: nowrap;
       }
       .forecast-wind,
@@ -160,8 +160,9 @@
         min-width: 60px;
         flex: 1 1 80px;
         font-size: 12px;
-        padding: 0 2px;
+        padding: 0 0 0 2px;
         white-space: nowrap;
+        text-align: left;
       }
       #language-toggle {
         position: fixed;
@@ -448,6 +449,15 @@
       .forecast-items .forecast-wind,
       .forecast-items .forecast-wind-speed {
         font-size: 12px;
+      }
+      .daily-forecast-items .forecast-wind {
+        min-width: 40px;
+        flex: 0 1 90px;
+        font-size: 12px;
+        padding: 0 0 0 2px;
+        white-space: nowrap;
+        text-align: left;
+        margin-right: 8px;
       }
     </style>
   </head>
