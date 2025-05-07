@@ -571,9 +571,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (infoToggleBtn) {
     infoToggleBtn.addEventListener("click", () => {
       const infoBox = document.getElementById("weather-info");
-      // Always check the actual display state
-      const isVisible =
-        infoBox.style.display !== "none" && infoBox.style.display !== "";
+      // Use getComputedStyle to check actual visibility
+      const isVisible = getComputedStyle(infoBox).display !== "none";
       if (isVisible) {
         infoBox.style.display = "none";
         infoToggleBtn.textContent = "🙈";
