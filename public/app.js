@@ -129,14 +129,24 @@ function toggleLanguage() {
 function initMap() {
   // Get initial position from URL or use defaults
   const urlParams = new URLSearchParams(window.location.search);
-  const initialLat = parseFloat(urlParams.get("lat")) || 0;
-  const initialLng = parseFloat(urlParams.get("lng")) || 0;
+  const initialLat = urlParams.has("lat")
+    ? parseFloat(urlParams.get("lat"))
+    : null;
+  const initialLng = urlParams.has("lng")
+    ? parseFloat(urlParams.get("lng"))
+    : null;
   const initialZoom = parseInt(urlParams.get("zoom")) || 2;
 
   // Set initial language and RTL
   document.body.dir = currentLang === "he" ? "rtl" : "ltr";
 
-  map = L.map("map").setView([initialLat, initialLng], initialZoom);
+  // Set initial view - either from URL or default to a world view
+  const initialView =
+    initialLat !== null && initialLng !== null
+      ? [initialLat, initialLng]
+      : [0, 0];
+
+  map = L.map("map").setView(initialView, initialZoom);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
@@ -162,10 +172,18 @@ function initMap() {
     }
 
     marker = L.marker([lat, lng]).addTo(map);
+    map.setView([lat, lng], map.getZoom());
     fetchWeather(lat, lng);
     // Notify search bar to show toggle
     document.dispatchEvent(new CustomEvent("locationSelected"));
   });
+
+  // If URL has coordinates, fetch weather for that location
+  if (initialLat !== null && initialLng !== null) {
+    marker = L.marker([initialLat, initialLng]).addTo(map);
+    fetchWeather(initialLat, initialLng);
+    document.dispatchEvent(new CustomEvent("locationSelected"));
+  }
 }
 
 async function fetchWeather(lat, lng) {
@@ -285,7 +303,10 @@ async function fetchWeather(lat, lng) {
       dailyKeys.length
     );
 
-    weatherInfo.style.display = window.weatherInfoHidden ? "none" : "block";
+    // Ensure weather info is visible
+    weatherInfo.style.display = "block";
+    window.weatherInfoHidden = false;
+
     weatherInfo.innerHTML = `
       <div class="content">
         <div class="current-weather">
@@ -320,6 +341,12 @@ async function fetchWeather(lat, lng) {
         </div>
       </div>
     `;
+
+    // Update info toggle button
+    const infoToggleBtn = document.querySelector(".info-toggle");
+    if (infoToggleBtn) {
+      infoToggleBtn.textContent = "👁️";
+    }
   } catch (error) {
     console.error("Error fetching weather data:", error);
   }
