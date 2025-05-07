@@ -463,6 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             marker = L.marker([lat, lng]).addTo(map);
             fetchWeather(lat, lng);
+            updateURL(lat, lng, map.getZoom());
             findLocationBtn.disabled = false;
             findLocationBtn.textContent =
               translations[currentLang].findLocation;
