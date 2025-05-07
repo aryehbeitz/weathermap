@@ -571,6 +571,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (infoToggleBtn) {
     infoToggleBtn.addEventListener("click", () => {
       const infoBox = document.getElementById("weather-info");
+      // Always check the actual display state
       const isVisible =
         infoBox.style.display !== "none" && infoBox.style.display !== "";
       if (isVisible) {
@@ -582,6 +583,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // Ensure icon is in sync when box is shown programmatically
+  document.addEventListener("locationSelected", () => {
+    const infoBox = document.getElementById("weather-info");
+    const infoToggleBtn = document.querySelector(".info-toggle");
+    if (infoBox && infoToggleBtn) {
+      infoBox.style.display = "block";
+      infoToggleBtn.textContent = "👁️";
+    }
+  });
 
   // Listen for weatherInfoToggled event
   document.addEventListener("weatherInfoToggled", (e) => {
