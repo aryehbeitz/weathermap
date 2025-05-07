@@ -106,6 +106,8 @@ function updateURL(lat, lng, zoom) {
   url.searchParams.set("zoom", zoom);
   url.searchParams.set("lang", currentLang);
   window.history.pushState({}, "", url);
+  // Save params to localStorage
+  localStorage.setItem("weather_url_params", url.search);
 }
 
 function toggleLanguage() {
@@ -178,6 +180,8 @@ function initMap() {
     marker = L.marker([lat, lng]).addTo(map);
     map.setView([lat, lng], map.getZoom());
     fetchWeather(lat, lng);
+    // Update URL and save params after click
+    updateURL(lat, lng, map.getZoom());
     // Notify search bar to show toggle
     document.dispatchEvent(new CustomEvent("locationSelected"));
   });
@@ -403,6 +407,14 @@ async function getLocationByIP() {
 
 // Initialize the map when the page loads
 document.addEventListener("DOMContentLoaded", () => {
+  // If no search params, try to load from localStorage
+  if (!window.location.search || window.location.search === "") {
+    const savedParams = localStorage.getItem("weather_url_params");
+    if (savedParams) {
+      window.location.search = savedParams;
+      return;
+    }
+  }
   initMap();
 
   // Set search bar placeholder based on language
