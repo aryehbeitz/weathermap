@@ -571,12 +571,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (infoToggleBtn) {
     infoToggleBtn.addEventListener("click", () => {
       const infoBox = document.getElementById("weather-info");
-      if (infoBox.style.display === "none" || infoBox.style.display === "") {
-        infoBox.style.display = "block";
-        infoToggleBtn.textContent = "👁️";
-      } else {
+      const isVisible =
+        infoBox.style.display !== "none" && infoBox.style.display !== "";
+      if (isVisible) {
         infoBox.style.display = "none";
         infoToggleBtn.textContent = "🙈";
+      } else {
+        infoBox.style.display = "block";
+        infoToggleBtn.textContent = "👁️";
       }
     });
   }
