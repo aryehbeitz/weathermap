@@ -110,29 +110,53 @@
       .forecast-items {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 0;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        overflow: hidden;
       }
       .forecast-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 5px 0;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 10px 0;
+        border-bottom: 1px solid #e0e0e0;
+        background: #fff;
+      }
+      .forecast-item:nth-child(even) {
+        background: #fafbfc;
       }
       .forecast-item:last-child {
         border-bottom: none;
       }
-      .forecast-time {
-        font-weight: bold;
-        min-width: 60px;
+      .forecast-item[style*="font-weight:bold"] {
+        background: #f7f7f7 !important;
+      }
+      .forecast-time,
+      .forecast-temp,
+      .forecast-wind,
+      .forecast-wind-speed {
+        flex: 1 1 0;
+        padding: 0 8px;
+        text-align: left;
       }
       .forecast-temp {
-        min-width: 60px;
         text-align: center;
       }
-      .forecast-wind {
+      .forecast-wind,
+      .forecast-wind-speed {
+        text-align: right;
+      }
+      .forecast-time {
+        min-width: 60px;
+        font-weight: bold;
+      }
+      .forecast-temp {
+        min-width: 80px;
+      }
+      .forecast-wind,
+      .forecast-wind-speed {
         min-width: 100px;
-        text-align: start;
       }
       #language-toggle {
         position: fixed;
