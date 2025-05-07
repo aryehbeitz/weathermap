@@ -299,7 +299,7 @@ async function fetchWeather(lat, lng) {
           <h4>${translations[currentLang].forecast}</h4>
           <div class="forecast-items">
             <div class="forecast-item" style="font-weight:bold;">
-              <div class="forecast-time">Time</div>
+              <div class="forecast-time">${translations[currentLang].time}</div>
               <div class="forecast-temp">${translations[currentLang].tempRange}</div>
               <div class="forecast-wind">${translations[currentLang].wind}</div>
             </div>
