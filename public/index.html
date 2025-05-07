@@ -108,18 +108,22 @@
         padding-top: 15px;
       }
       .forecast-items {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        border: 1px solid #e0e0e0;
-        border-radius: 6px;
-        overflow: hidden;
+        font-size: 13px;
+      }
+      .forecast-items .forecast-item {
+        font-size: 13px;
+      }
+      .forecast-items .forecast-time,
+      .forecast-items .forecast-temp,
+      .forecast-items .forecast-wind,
+      .forecast-items .forecast-wind-speed {
+        font-size: 13px;
       }
       .forecast-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 0;
+        padding: 6px 0;
         border-bottom: 1px solid #e0e0e0;
         background: #fff;
       }
@@ -131,32 +135,32 @@
       }
       .forecast-item[style*="font-weight:bold"] {
         background: #f7f7f7 !important;
+        font-size: 16px;
       }
       .forecast-time,
+      .daily-forecast-items .forecast-time {
+        min-width: 40px;
+        flex: 0 0 48px;
+        font-size: 12px;
+        padding: 0 2px;
+      }
       .forecast-temp,
-      .forecast-wind,
-      .forecast-wind-speed {
-        flex: 1 1 0;
-        padding: 0 8px;
-        text-align: left;
-      }
-      .forecast-temp {
+      .daily-forecast-items .forecast-temp {
+        font-size: 12px;
+        flex: 2 1 140px;
+        min-width: 120px;
         text-align: center;
+        padding: 0 2px;
+        white-space: nowrap;
       }
       .forecast-wind,
-      .forecast-wind-speed {
-        text-align: right;
-      }
-      .forecast-time {
+      .forecast-wind-speed,
+      .daily-forecast-items .forecast-wind,
+      .daily-forecast-items .forecast-wind-speed {
         min-width: 60px;
-        font-weight: bold;
-      }
-      .forecast-temp {
-        min-width: 80px;
-      }
-      .forecast-wind,
-      .forecast-wind-speed {
-        min-width: 100px;
+        flex: 1 1 80px;
+        font-size: 12px;
+        padding: 0 2px;
       }
       #language-toggle {
         position: fixed;
@@ -415,12 +419,34 @@
           right: auto;
         }
       }
+      .daily-forecast-items {
+        font-size: 13px;
+      }
       .daily-forecast-items .daily-item {
         font-size: 13px;
-        text-align: start;
+      }
+      .daily-forecast-items .forecast-time,
+      .daily-forecast-items .forecast-temp,
+      .daily-forecast-items .forecast-wind,
+      .daily-forecast-items .forecast-wind-speed {
+        font-size: 13px;
+      }
+      .daily-forecast-items .forecast-temp {
+        white-space: normal;
+        text-overflow: unset;
+        overflow: visible;
+        white-space: nowrap;
       }
       [dir="rtl"] .daily-forecast-items .daily-item {
         text-align: right;
+      }
+      .forecast-items,
+      .forecast-items .forecast-item,
+      .forecast-items .forecast-time,
+      .forecast-items .forecast-temp,
+      .forecast-items .forecast-wind,
+      .forecast-items .forecast-wind-speed {
+        font-size: 12px;
       }
     </style>
   </head>
