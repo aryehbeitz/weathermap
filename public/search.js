@@ -148,16 +148,32 @@ class CitySearch {
     }
 
     const data = await response.json();
-    return data.map((item) => ({
-      name: item.display_name.split(",")[0],
-      country: item.display_name.split(",").pop().trim(),
-      state:
+    const uniqueCities = new Map();
+
+    data.forEach((item) => {
+      const cityName = item.display_name.split(",")[0];
+      const country = item.display_name.split(",").pop().trim();
+      const state =
         item.display_name.split(",").length > 2
           ? item.display_name.split(",")[1].trim()
-          : "",
-      lat: parseFloat(item.lat),
-      lng: parseFloat(item.lon),
-    }));
+          : "";
+
+      // Create a unique key combining city, state, and country
+      const key = `${cityName.toLowerCase()}-${state.toLowerCase()}-${country.toLowerCase()}`;
+
+      // Only add if we haven't seen this combination before
+      if (!uniqueCities.has(key)) {
+        uniqueCities.set(key, {
+          name: cityName,
+          country: country,
+          state: state,
+          lat: parseFloat(item.lat),
+          lng: parseFloat(item.lon),
+        });
+      }
+    });
+
+    return Array.from(uniqueCities.values());
   }
 
   displayResults(results) {
