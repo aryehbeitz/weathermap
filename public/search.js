@@ -212,9 +212,7 @@ class CitySearch {
   }
 
   selectCity(city) {
-    this.searchInput.value = `${city.name}, ${
-      city.state ? city.state + ", " : ""
-    }${city.country}`;
+    this.searchInput.value = "";
     this.hideResults();
     this.citySelected = true;
     this.showDataBox();
