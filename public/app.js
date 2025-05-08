@@ -580,20 +580,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (infoToggleBtn) infoToggleBtn.textContent = "🙈";
   }
 
-  // Info toggle button logic
-  const infoToggleBtn = document.querySelector(".info-toggle");
-  if (infoToggleBtn) {
-    infoToggleBtn.addEventListener("click", () => {
-      const infoBox = document.getElementById("weather-info");
-      const isVisible = getComputedStyle(infoBox).display !== "none";
-      if (isVisible) {
-        hideWeatherInfoBox();
-      } else {
-        showWeatherInfoBox();
-      }
-    });
-  }
-
   // Ensure icon is in sync when box is shown programmatically
   document.addEventListener("locationSelected", () => {
     showWeatherInfoBox();
