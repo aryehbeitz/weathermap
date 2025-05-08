@@ -444,6 +444,9 @@ document.addEventListener("DOMContentLoaded", () => {
         findLocationBtn.textContent =
           translations[currentLang].findLocation + "...";
 
+        // Clear previous location name
+        selectedCityDisplayName = null;
+
         // Set a timeout for geolocation
         const timeoutId = setTimeout(() => {
           findLocationBtn.disabled = false;
