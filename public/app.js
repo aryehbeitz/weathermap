@@ -453,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Try to get location with high accuracy first
         navigator.geolocation.getCurrentPosition(
-          (position) => {
+          async (position) => {
             clearTimeout(timeoutId);
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
@@ -462,6 +462,21 @@ document.addEventListener("DOMContentLoaded", () => {
               map.removeLayer(marker);
             }
             marker = L.marker([lat, lng]).addTo(map);
+
+            // Get city name from coordinates
+            try {
+              const response = await fetch(
+                `/api/city-name?lat=${lat}&lon=${lng}&lang=${currentLang}`
+              );
+              const data = await response.json();
+              const searchInput = document.querySelector(".search-input");
+              if (searchInput && data.display_name) {
+                searchInput.value = data.display_name.split(",")[0];
+              }
+            } catch (error) {
+              console.error("Error fetching city name:", error);
+            }
+
             fetchWeather(lat, lng);
             updateURL(lat, lng, map.getZoom());
             findLocationBtn.disabled = false;
@@ -501,6 +516,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     marker = L.marker([ipLocation.lat, ipLocation.lng]).addTo(
                       map
                     );
+
+                    // Update search input with IP location city
+                    const searchInput = document.querySelector(".search-input");
+                    if (searchInput && ipLocation.city) {
+                      searchInput.value = ipLocation.city;
+                      // Set the selected city display name for the weather info box
+                      selectedCityDisplayName = `${ipLocation.city}, ${ipLocation.country}`;
+                    }
+
                     fetchWeather(ipLocation.lat, ipLocation.lng);
 
                     // Show notification about using IP location
