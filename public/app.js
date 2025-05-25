@@ -20,6 +20,20 @@ let currentLang =
 let currentVersion = null;
 let selectedCityDisplayName = null;
 
+// Helper function to show notifications
+function showNotification(message) {
+  const notification = document.createElement("div");
+  notification.className = "notification";
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  // Remove notification after 5 seconds
+  setTimeout(() => {
+    notification.classList.add("fade-out");
+    setTimeout(() => notification.remove(), 500);
+  }, 5000);
+}
+
 // Version checking function
 async function checkVersion() {
   try {
@@ -563,19 +577,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // Helper function to show notifications
-  function showNotification(message) {
-    const notification = document.createElement("div");
-    notification.className = "notification";
-    notification.textContent = message;
-    document.body.appendChild(notification);
 
-    // Remove notification after 5 seconds
-    setTimeout(() => {
-      notification.classList.add("fade-out");
-      setTimeout(() => notification.remove(), 500);
-    }, 5000);
-  }
 
   // Update Find Location button text on language toggle
   const toggleButton = document.querySelector("#language-toggle button");
