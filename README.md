@@ -157,7 +157,7 @@ Note:
 
 ```bash
 git clone <repository-url>
-cd weather
+cd weathermap
 ```
 
 2. Create a `.env` file with your OpenWeather API key:
