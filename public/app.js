@@ -187,6 +187,10 @@ function initMap() {
     lat = Math.max(-90, Math.min(90, lat));
     lng = Math.max(-180, Math.min(180, lng));
 
+    // Clear previously selected city name so the info box reflects the new
+    // location tapped on the map
+    selectedCityDisplayName = null;
+
     if (marker) {
       map.removeLayer(marker);
     }
