@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
+    "lint": "eslint .",
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
@@ -20,6 +21,7 @@
   "devDependencies": {
     "nodemon": "^3.1.0",
     "jest": "^29.7.0",
-    "supertest": "^6.3.4"
+    "supertest": "^6.3.4",
+    "eslint": "^8.57.0"
   }
 }

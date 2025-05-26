@@ -41,7 +41,7 @@ const translations = {
     humidity: "לחות",
     wind: "רוח",
     gustsUpTo: "משבים עד",
-    kmh: 'קמ"ש',
+    kmh: "קמ\"ש",
     blowingFrom: "נושבת מ",
     percent: "%",
     celsius: "°C",
