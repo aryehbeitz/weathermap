@@ -6,8 +6,6 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_KEY = process.env.OPENWEATHER_API_KEY;
-const LANG = process.env.LANG || "en";
 
 app.use(cors());
 app.use(express.json());
