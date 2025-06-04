@@ -1,0 +1,72 @@
+name: Docker Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    # Allow manual triggering of the workflow
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: false
+        load: true
+        tags: weather-app:latest
+
+    - name: Start container and run tests
+      run: |
+        # Build the image
+        docker build -t weather-app .
+
+        # Start the container in detached mode
+        CONTAINER_ID=$(docker run -d -p 3001:3001 --name weather-test weather-app)
+
+        # Function to stop and remove container
+        cleanup() {
+          echo "Stopping and removing container..."
+          docker stop $CONTAINER_ID || true
+          docker rm -f $CONTAINER_ID || true
+        }
+
+        # Ensure container is cleaned up even if the test fails
+        trap cleanup EXIT
+
+        # Wait for the container to be ready
+        echo "Waiting for the application to start..."
+        for i in {1..30}; do
+          if curl -s http://localhost:3001 >/dev/null; then
+            echo "Application is up!"
+            break
+          fi
+          if [ $i -eq 30 ]; then
+            echo "Application failed to start"
+            docker logs $CONTAINER_ID
+            exit 1
+          fi
+          sleep 2
+        done
+
+        # Run your tests against the running container
+        echo "Running tests..."
+        # Replace this with your actual test commands
+        curl -s http://localhost:3001 | grep -q "Weather Map" || (echo "Homepage check failed" && exit 1)
+
+        # If we get here, tests passed
+        echo "All tests passed!"
+
+    # Removed Docker Hub push steps as they're not needed for testing

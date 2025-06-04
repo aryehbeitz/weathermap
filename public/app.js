@@ -147,26 +147,26 @@ function initMap() {
   const urlParams = new URLSearchParams(window.location.search);
   const initialLat = urlParams.has("lat")
     ? parseFloat(urlParams.get("lat"))
-    : null;
+    : 0;
   const initialLng = urlParams.has("lng")
     ? parseFloat(urlParams.get("lng"))
-    : null;
+    : 0;
   const initialZoom = parseInt(urlParams.get("zoom")) || 2;
 
   // Set initial language and RTL
   document.body.dir = currentLang === "he" ? "rtl" : "ltr";
 
-  // Set initial view - either from URL or default to a world view
-  const initialView =
-    initialLat !== null && initialLng !== null
-      ? [initialLat, initialLng]
-      : [0, 0];
+  // Initialize the map
+  map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://demotiles.maplibre.org/style.json',
+    center: [initialLng, initialLat],
+    zoom: initialZoom,
+    attributionControl: true
+  });
 
-  map = L.map("map", { worldCopyJump: true }).setView(initialView, initialZoom);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap contributors",
-  }).addTo(map);
+  // Add navigation control
+  map.addControl(new maplibregl.NavigationControl());
 
   // Initialize language toggle
   const toggleButton = document.querySelector("#language-toggle button");
@@ -174,41 +174,53 @@ function initMap() {
   toggleButton.onclick = toggleLanguage;
 
   // Update URL when map moves
-  map.on("moveend", () => {
+  map.on('moveend', () => {
     const center = map.getCenter();
     updateURL(center.lat, center.lng, map.getZoom());
   });
 
-  map.on("click", (e) => {
-    let lat = e.latlng.lat;
-    let lng = e.latlng.lng;
+  // Create a marker element
+  const el = document.createElement('div');
+  el.className = 'marker';
+  el.style.backgroundImage = 'url(https://docs.maptiler.com/maplibre-gl-js-docs/assets/icon-location.svg)';
+  el.style.width = '32px';
+  el.style.height = '32px';
+  el.style.backgroundSize = '100%';
+
+  // Add marker on click
+  map.on('click', (e) => {
+    let lng = e.lngLat.lng;
+    let lat = e.lngLat.lat;
 
     // Clamp latitude and longitude to valid ranges
     lat = Math.max(-90, Math.min(90, lat));
     lng = Math.max(-180, Math.min(180, lng));
 
-    // Clear previously selected city name so the info box reflects the new
-    // location tapped on the map
+    // Clear previously selected city name so the info box reflects the new location
     selectedCityDisplayName = null;
 
+    // Remove existing marker if any
     if (marker) {
-      map.removeLayer(marker);
+      marker.remove();
     }
 
-    marker = L.marker([lat, lng]).addTo(map);
-    map.setView([lat, lng], map.getZoom());
-    // Clear any previously selected city name so the clicked location is shown
-    selectedCityDisplayName = null;
+
+    // Add new marker
+    marker = new maplibregl.Marker(el)
+      .setLngLat([lng, lat])
+      .addTo(map);
+
+    // Update weather and URL
     fetchWeather(lat, lng);
-    // Update URL and save params after click
     updateURL(lat, lng, map.getZoom());
-    // Notify search bar to show toggle
     document.dispatchEvent(new CustomEvent("locationSelected"));
   });
 
-  // If URL has coordinates, fetch weather for that location
-  if (initialLat !== null && initialLng !== null) {
-    marker = L.marker([initialLat, initialLng]).addTo(map);
+  // If URL has coordinates, add marker and fetch weather
+  if (initialLat !== 0 || initialLng !== 0) {
+    marker = new maplibregl.Marker(el)
+      .setLngLat([initialLng, initialLat])
+      .addTo(map);
     fetchWeather(initialLat, initialLng);
     document.dispatchEvent(new CustomEvent("locationSelected"));
   }
@@ -441,110 +453,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.querySelector(".search-input");
   if (searchInput) {
     searchInput.placeholder = translations[currentLang].searchPlaceholder;
-  }
-
-  // Listen for city selection from search
-  document.addEventListener("citySelected", (event) => {
-    const { lat, lng, displayName } = event.detail;
-    selectedCityDisplayName = displayName || null;
-    map.setView([lat, lng], 12);
-    if (marker) {
-      map.removeLayer(marker);
-    }
-    marker = L.marker([lat, lng]).addTo(map);
-    fetchWeather(lat, lng);
   });
-
-  const findLocationBtn = document.getElementById("find-location");
-  if (findLocationBtn) {
-    findLocationBtn.textContent = translations[currentLang].findLocation;
-    findLocationBtn.onclick = async () => {
-      if (navigator.geolocation) {
-        findLocationBtn.disabled = true;
-        findLocationBtn.textContent =
-          translations[currentLang].findLocation + "...";
-
-        // Clear previous location name
-        selectedCityDisplayName = null;
-
-        // Set a timeout for geolocation
-        const timeoutId = setTimeout(() => {
-          findLocationBtn.disabled = false;
-          findLocationBtn.textContent = translations[currentLang].findLocation;
-          showNotification(translations[currentLang].locationTimeout);
-        }, 10000); // 10 second timeout
-
-        // Try to get location with high accuracy first
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            clearTimeout(timeoutId);
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            map.setView([lat, lng], 12);
-            if (marker) {
-              map.removeLayer(marker);
-            }
-            marker = L.marker([lat, lng]).addTo(map);
-
-            // Get city name from coordinates
-            try {
-              const response = await fetch(
-                `/api/city-name?lat=${lat}&lon=${lng}&lang=${currentLang}`
-              );
-              const data = await response.json();
-              const searchInput = document.querySelector(".search-input");
-              if (searchInput && data.display_name) {
-                searchInput.value = data.display_name.split(",")[0];
-              }
-            } catch (error) {
-              console.error("Error fetching city name:", error);
-            }
-
-            fetchWeather(lat, lng);
-            updateURL(lat, lng, map.getZoom());
-            findLocationBtn.disabled = false;
-            findLocationBtn.textContent =
-              translations[currentLang].findLocation;
-            // Notify search bar to show toggle
-            document.dispatchEvent(new CustomEvent("locationSelected"));
-          },
-          async (error) => {
-            clearTimeout(timeoutId);
-            findLocationBtn.disabled = false;
-            findLocationBtn.textContent =
-              translations[currentLang].findLocation;
-
-            let errorMessage;
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                errorMessage = translations[currentLang].locationDenied;
-                break;
-              case error.POSITION_UNAVAILABLE:
-                // Check if it's a kCLErrorLocationUnknown error
-                if (
-                  error.message &&
-                  error.message.includes("Position update is unavailable")
-                ) {
-                  try {
-                    // Try IP-based location as fallback
-                    const ipLocation = await getLocationByIP();
-                    if (!ipLocation || !ipLocation.lat || !ipLocation.lng) {
-                      throw new Error("Invalid IP location data");
-                    }
-
-                    map.setView([ipLocation.lat, ipLocation.lng], 12);
-                    if (marker) {
-                      map.removeLayer(marker);
-                    }
-                    marker = L.marker([ipLocation.lat, ipLocation.lng]).addTo(
-                      map
-                    );
-
-                    // Update search input with IP location city
-                    const searchInput = document.querySelector(".search-input");
-                    if (searchInput && ipLocation.city) {
-                      searchInput.value = ipLocation.city;
-                      // Set the selected city display name for the weather info box
+  if (marker) {
+    marker.remove();
                       selectedCityDisplayName = `${ipLocation.city}, ${ipLocation.country}`;
                     }
 
