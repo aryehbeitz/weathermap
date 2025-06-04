@@ -24,9 +24,10 @@
     />
     <title>Weather Map</title>
     <link
+      href="https://unpkg.com/maplibre-gl@3.0.0/dist/maplibre-gl.css"
       rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+    <script src="https://unpkg.com/maplibre-gl@3.0.0/dist/maplibre-gl.js"></script>
     <style>
       html {
         box-sizing: border-box;
@@ -469,7 +470,7 @@
     </style>
   </head>
   <body>
-    <div id="map"></div>
+    <div id="map" style="position: absolute; top: 0; bottom: 0; width: 100%;"></div>
     <div class="search-container">
       <input
         type="text"

@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run version update
+npm run version:patch
+
+# Stage the version files
+git add public/version.json package.json
