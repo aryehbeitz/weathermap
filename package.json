@@ -1,6 +1,9 @@
 {
   "name": "weather",
-  "version": "1.0.89",
+  "version": "1.0.90",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "description": "Minimalistic weather app with OpenStreetMap integration",
   "main": "server.js",
   "scripts": {
