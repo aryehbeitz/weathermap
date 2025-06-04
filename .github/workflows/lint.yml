@@ -1,12 +1,9 @@
-name: Lint
+name: CI
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
-
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,3 +13,4 @@ jobs:
           node-version-file: '.nvmrc'
       - run: npm ci
       - run: npm run lint
+      - run: npm test
