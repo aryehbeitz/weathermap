@@ -1,6 +1,6 @@
 {
   "name": "weather",
-  "version": "1.0.90",
+  "version": "1.0.91",
   "engines": {
     "node": ">=22.0.0"
   },
