@@ -241,6 +241,19 @@ async function fetchWeather(lat, lng) {
       cityData.address?.village ||
       currentData.name;
 
+    // Get current local date and time
+    const now = new Date();
+    const lastUpdated = now.toLocaleString(
+      currentLang === "he" ? "he-IL" : "en-US",
+      {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+
     // Convert m/s to km/h (1 m/s = 3.6 km/h)
     const windSpeedKmh = Math.round(currentData.wind.speed * 3.6);
     const windGustsKmh = currentData.wind.gust
@@ -357,6 +370,9 @@ async function fetchWeather(lat, lng) {
     }, ${
       translations[currentLang].blowingFrom
     } ${windDirection}${windGustsKmh}</p>
+          <p class="last-updated">${
+            translations[currentLang].lastUpdated
+          }: ${lastUpdated}</p>
         </div>
         <div class="forecast-container">
           <h4>${translations[currentLang].forecast}</h4>
@@ -494,7 +510,9 @@ document.addEventListener("DOMContentLoaded", () => {
               const data = await response.json();
               const searchInput = document.querySelector(".search-input");
               if (searchInput && data.display_name) {
-                searchInput.value = data.address ? `${data.address.town}, ${data.address.country}` : data.display_name;
+                searchInput.value = data.address
+                  ? `${data.address.town}, ${data.address.country}`
+                  : data.display_name;
               }
             } catch (error) {
               console.error("Error fetching city name:", error);

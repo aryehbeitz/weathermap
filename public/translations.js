@@ -34,6 +34,7 @@ const translations = {
     summary: "Summary",
     time: "Time",
     windSpeed: "Wind speed",
+    lastUpdated: "Last updated",
   },
   he: {
     temperature: "טמפרטורה",
@@ -41,7 +42,7 @@ const translations = {
     humidity: "לחות",
     wind: "רוח",
     gustsUpTo: "משבים עד",
-    kmh: "קמ\"ש",
+    kmh: 'קמ"ש',
     blowingFrom: "נושבת מ",
     percent: "%",
     celsius: "°C",
@@ -67,5 +68,6 @@ const translations = {
     summary: "סיכום",
     time: "שעה",
     windSpeed: "מהירות רוח",
+    lastUpdated: "עדכון אחרון",
   },
 };
