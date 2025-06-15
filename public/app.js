@@ -494,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
               const data = await response.json();
               const searchInput = document.querySelector(".search-input");
               if (searchInput && data.display_name) {
-                searchInput.value = data.display_name.split(",")[0];
+                searchInput.value = data.address ? `${data.address.town}, ${data.address.country}` : data.display_name;
               }
             } catch (error) {
               console.error("Error fetching city name:", error);
@@ -582,8 +582,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
   }
-
-
 
   // Update Find Location button text on language toggle
   const toggleButton = document.querySelector("#language-toggle button");
