@@ -1,0 +1,41 @@
+{
+  "codeStyle": {
+    "indent": 2,
+    "quotes": "double",
+    "semicolons": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "printWidth": 100,
+    "singleQuote": false,
+    "jsxSingleQuote": false,
+    "tabWidth": 2,
+    "useTabs": false
+  },
+  "linting": {
+    "eslint": {
+      "extends": [
+        "eslint:recommended"
+      ],
+      "rules": {
+        "indent": ["error", 2],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+        "no-console": "warn",
+        "no-unused-vars": "warn",
+        "no-var": "error",
+        "prefer-const": "error",
+        "object-curly-spacing": ["error", "always"],
+        "array-bracket-spacing": ["error", "never"],
+        "space-in-parens": ["error", "never"],
+        "space-before-blocks": "error",
+        "space-before-function-paren": ["error", "never"],
+        "keyword-spacing": ["error", { "before": true, "after": true }],
+        "arrow-spacing": ["error", { "before": true, "after": true }]
+      }
+    }
+  },
+  "autoFixOnSave": true,
+  "formatOnSave": true,
+  "respectGitignore": true
+}
